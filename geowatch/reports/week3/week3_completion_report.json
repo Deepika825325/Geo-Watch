@@ -1,0 +1,76 @@
+{
+  "checks": {
+    "compileall": true,
+    "date_order_symmetry": true,
+    "git_diff_check": true,
+    "pip_check": true,
+    "pip_check_summary": "No broken requirements found.",
+    "pytest": true,
+    "pytest_summary": "27 passed in 12.55s",
+    "real_patch_model_forward": true,
+    "required_files": true,
+    "test_labels_requested": false,
+    "training_only_dataset": true
+  },
+  "compile_output": "",
+  "completed_at": "2026-07-16T16:19:00+05:30",
+  "dataset": {
+    "after_shape": [
+      1,
+      4,
+      64,
+      64
+    ],
+    "before_shape": [
+      1,
+      4,
+      64,
+      64
+    ],
+    "change_fraction": 0.011474609375,
+    "mask_shape": [
+      1,
+      1,
+      64,
+      64
+    ],
+    "mask_values": [
+      0.0,
+      1.0
+    ],
+    "patch_id": "abudhabi_r00_y00000_x00000_h64_w64",
+    "region": "abudhabi"
+  },
+  "environment": {
+    "device": "cpu",
+    "pytest": "9.1.1",
+    "python": "3.11.6",
+    "torch": "2.13.0+cpu",
+    "torchvision": "0.28.0+cpu"
+  },
+  "git_diff_check_output": "",
+  "model": {
+    "difference_fusion": "absolute",
+    "input_channels": 4,
+    "maximum_swap_error": 0.0,
+    "output_shape": [
+      1,
+      1,
+      64,
+      64
+    ],
+    "raw_logits": true,
+    "shared_encoder": true,
+    "total_parameters": 11521897,
+    "trainable_parameters": 11521897
+  },
+  "repository_status": [
+    "M requirements.txt",
+    "?? src/data/oscd_dataset.py",
+    "?? src/evaluation/week3_audit.py",
+    "?? src/models/",
+    "?? tests/"
+  ],
+  "status": "complete",
+  "week": 3
+}
