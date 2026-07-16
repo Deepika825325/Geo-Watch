@@ -1,0 +1,126 @@
+{
+  "schema_version": "1.0",
+  "generated_at_utc": "2026-07-16T05:34:05.515059+00:00",
+  "status": "success",
+  "source_alignment_report": "data\\processed\\aligned\\alignment_report.json",
+  "source_alignment_report_sha256": "f6e2d12d24f5757f66ef14de46b5409ed3824ab1d49c1c61edffafd76203cc04",
+  "grid": {
+    "width": 1295,
+    "height": 1347,
+    "crs": "EPSG:32644",
+    "epsg": 32644,
+    "transform": [
+      10.0,
+      0.0,
+      213050.0,
+      0.0,
+      -10.0,
+      1933580.0
+    ]
+  },
+  "hard_invalid_classes": [
+    0,
+    1,
+    7
+  ],
+  "cloud_classes": [
+    3,
+    8,
+    9,
+    10,
+    11
+  ],
+  "cloud_buffer_pixels": 3,
+  "cloud_buffer_meters": 30.0,
+  "minimum_pair_valid_fraction": 0.9,
+  "pair_valid_pixels": 1731009,
+  "total_pixels": 1744365,
+  "pair_valid_fraction": 0.9923433455727443,
+  "quality_gate_passed": true,
+  "periods": {
+    "before": {
+      "item_id": "S2A_MSIL2A_20210314T050651_N0500_R019_T44QKE_20230528T183433",
+      "acquisition_datetime": "2021-03-14T05:06:51.024Z",
+      "source_scl": "data\\processed\\aligned\\before\\SCL_20m.tif",
+      "source_scl_sha256": "409df1db369aedc155dd40d3eb00003c062ec5c4ee32c0f47cef14f8431803c7",
+      "scl_histogram": {
+        "0": 0,
+        "1": 0,
+        "2": 1684,
+        "3": 0,
+        "4": 156326,
+        "5": 1493797,
+        "6": 83504,
+        "7": 9054,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0
+      },
+      "statistics": {
+        "total_pixels": 1744365,
+        "hard_invalid_pixels": 9054,
+        "raw_atmospheric_invalid_pixels": 0,
+        "buffered_atmospheric_invalid_pixels": 0,
+        "final_invalid_pixels": 9054,
+        "valid_pixels": 1735311,
+        "hard_invalid_fraction": 0.005190427462142384,
+        "raw_atmospheric_invalid_fraction": 0.0,
+        "buffered_atmospheric_invalid_fraction": 0.0,
+        "final_invalid_fraction": 0.005190427462142384,
+        "valid_fraction": 0.9948095725378576
+      },
+      "output": {
+        "output_path": "data\\processed\\cloud_masks\\before_valid_mask.tif",
+        "status": "created",
+        "sha256": "a5d2a667295fea5d24da3c2ac70a4f8969de571fa3431cbe0ad12508474157b7",
+        "size_bytes": 10332
+      }
+    },
+    "after": {
+      "item_id": "S2A_MSIL2A_20250315T051241_N0511_R019_T44QKE_20250315T113317",
+      "acquisition_datetime": "2025-03-15T05:12:41.024Z",
+      "source_scl": "data\\processed\\aligned\\after\\SCL_20m.tif",
+      "source_scl_sha256": "223dc626e543e6c867610586eb8a4eca6fff9cdd4b6c61e5b1624c4d4f79c32e",
+      "scl_histogram": {
+        "0": 0,
+        "1": 0,
+        "2": 1156,
+        "3": 0,
+        "4": 62704,
+        "5": 1587355,
+        "6": 85208,
+        "7": 7942,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0
+      },
+      "statistics": {
+        "total_pixels": 1744365,
+        "hard_invalid_pixels": 7942,
+        "raw_atmospheric_invalid_pixels": 0,
+        "buffered_atmospheric_invalid_pixels": 0,
+        "final_invalid_pixels": 7942,
+        "valid_pixels": 1736423,
+        "hard_invalid_fraction": 0.004552946201053105,
+        "raw_atmospheric_invalid_fraction": 0.0,
+        "buffered_atmospheric_invalid_fraction": 0.0,
+        "final_invalid_fraction": 0.004552946201053105,
+        "valid_fraction": 0.9954470537989469
+      },
+      "output": {
+        "output_path": "data\\processed\\cloud_masks\\after_valid_mask.tif",
+        "status": "created",
+        "sha256": "c045ecb55d78d5faa818e80e9b7002077f9ca0e0a97a139195192d2d7f0f3a93",
+        "size_bytes": 9039
+      }
+    }
+  },
+  "pair_output": {
+    "output_path": "data\\processed\\cloud_masks\\pair_valid_mask.tif",
+    "status": "created",
+    "sha256": "71d1e0689135857b5eecf3fc6c3f2e1034a8fda349a37176af98860733c3952d",
+    "size_bytes": 10903
+  }
+}

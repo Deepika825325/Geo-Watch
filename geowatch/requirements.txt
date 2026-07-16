@@ -1,0 +1,9 @@
+﻿PyYAML==6.0.3
+pyproj==3.7.2
+requests==2.34.2
+shapely==2.1.2
+boto3==1.43.49
+rasterio==1.4.4
+PyYAML==6.0.3
+pyproj==3.7.2
+

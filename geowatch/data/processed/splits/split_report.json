@@ -1,0 +1,109 @@
+{
+  "schema_version": "1.0",
+  "generated_at_utc": "2026-07-16T05:48:14.564911+00:00",
+  "status": "success",
+  "strategy": "contiguous_geographic_blocks",
+  "split_axis": "column",
+  "split_order": [
+    "train",
+    "validation",
+    "test"
+  ],
+  "configured_ratios": {
+    "train": 0.6,
+    "test": 0.2,
+    "validation": 0.2
+  },
+  "actual_ratios": {
+    "train": 0.6,
+    "validation": 0.2,
+    "test": 0.2
+  },
+  "source_patch_index": "data\\processed\\patches\\patch_index.csv",
+  "source_tiling_report": "data\\processed\\patches\\tiling_report.json",
+  "source_tiling_report_sha256": "be91310a8793473dc6d2f0d30c098558ff94d3211e8e5bb1bbc7f39f971e94c6",
+  "patch_size_pixels": 256,
+  "patch_stride_pixels": 256,
+  "overlapping_patches": false,
+  "accepted_patch_count": 25,
+  "assigned_patch_count": 25,
+  "unassigned_patch_count": 0,
+  "patch_index_sha256_after_assignment": "07bb1e5a2d84ed458d63c9da1044ec492968a1beacfee7560ce92eaeba4b2053",
+  "splits": {
+    "train": {
+      "patch_count": 15,
+      "geographic_units": [
+        0,
+        1,
+        2
+      ],
+      "extent": {
+        "left": 213050.0,
+        "bottom": 1920780.0,
+        "right": 220730.0,
+        "top": 1933580.0
+      },
+      "output_path": "data\\processed\\splits\\train.csv",
+      "sha256": "cae557af67fa0c09d5a49ac9d954b2cf4fdaada2074dc597c213677d26638229",
+      "patch_ids": [
+        "GW_R000_C000",
+        "GW_R000_C001",
+        "GW_R000_C002",
+        "GW_R001_C000",
+        "GW_R001_C001",
+        "GW_R001_C002",
+        "GW_R002_C000",
+        "GW_R002_C001",
+        "GW_R002_C002",
+        "GW_R003_C000",
+        "GW_R003_C001",
+        "GW_R003_C002",
+        "GW_R004_C000",
+        "GW_R004_C001",
+        "GW_R004_C002"
+      ]
+    },
+    "validation": {
+      "patch_count": 5,
+      "geographic_units": [
+        3
+      ],
+      "extent": {
+        "left": 220730.0,
+        "bottom": 1920780.0,
+        "right": 223290.0,
+        "top": 1933580.0
+      },
+      "output_path": "data\\processed\\splits\\validation.csv",
+      "sha256": "d50b106a483e4a6638d28e329bc41086efc1e2cb98ff971c3ada0c11c2fd2a73",
+      "patch_ids": [
+        "GW_R000_C003",
+        "GW_R001_C003",
+        "GW_R002_C003",
+        "GW_R003_C003",
+        "GW_R004_C003"
+      ]
+    },
+    "test": {
+      "patch_count": 5,
+      "geographic_units": [
+        4
+      ],
+      "extent": {
+        "left": 223290.0,
+        "bottom": 1920780.0,
+        "right": 225850.0,
+        "top": 1933580.0
+      },
+      "output_path": "data\\processed\\splits\\test.csv",
+      "sha256": "f2894876f99ea713935cc2037616fe6aad5e2269153cae267bad475c2714bbbb",
+      "patch_ids": [
+        "GW_R000_C004",
+        "GW_R001_C004",
+        "GW_R002_C004",
+        "GW_R003_C004",
+        "GW_R004_C004"
+      ]
+    }
+  }
+}

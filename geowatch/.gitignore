@@ -1,0 +1,94 @@
+# ==========================================
+# GeoWatch Git ignore rules
+# ==========================================
+
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python cache and build files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Secrets and local environment files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# IDE and operating-system files
+.vscode/
+.idea/
+*.code-workspace
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.part
+logs/
+tmp/
+temp/
+
+# Raw Sentinel-2 payloads
+# Small JSON and CSV reports remain trackable.
+data/raw/**/*.jp2
+data/raw/**/*.tif
+data/raw/**/*.tiff
+data/raw/**/*.xml
+data/raw/**/*.SAFE/
+
+# Public benchmark payloads
+# Acquisition manifests and dataset cards remain trackable.
+data/benchmark/**/archives/
+data/benchmark/**/raw/
+
+# Generated geospatial raster products
+# Reports, indexes and split CSVs remain trackable.
+data/processed/**/*.tif
+data/processed/**/*.tiff
+data/processed/**/*.jp2
+data/processed/**/*.vrt
+data/processed/**/*.npy
+data/processed/**/*.npz
+
+# Model weights and experiment outputs
+checkpoints/
+models/checkpoints/
+artifacts/
+outputs/
+runs/
+wandb/
+mlruns/
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.engine
+
+# Local archives
+data/**/*.zip
+data/**/*.tar
+data/**/*.tar.gz
+data/**/*.7z

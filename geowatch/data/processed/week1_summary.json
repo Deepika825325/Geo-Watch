@@ -1,0 +1,176 @@
+{
+  "schema_version": "1.0",
+  "generated_at_utc": "2026-07-16T06:23:32.470486+00:00",
+  "project": "GeoWatch",
+  "roadmap_period": "Week 1",
+  "status": "complete",
+  "completion_percentage": 100.0,
+  "passed_stage_count": 9,
+  "total_stage_count": 9,
+  "aoi": {
+    "name": "Hyderabad Western Growth Corridor",
+    "bbox_wgs84": [
+      78.3,
+      17.35,
+      78.42,
+      17.47
+    ],
+    "target_epsg": 32644
+  },
+  "operational_dataset": {
+    "raw_rasters": 14,
+    "aligned_rasters": 14,
+    "pair_valid_fraction": 0.9923433455727443,
+    "accepted_patches": 25,
+    "train_patches": 15,
+    "validation_patches": 5,
+    "test_patches": 5,
+    "input_channels": 6,
+    "patch_size_pixels": 256
+  },
+  "benchmark_dataset": {
+    "name": "OSCD",
+    "image_regions": 24,
+    "train_regions": 14,
+    "test_regions": 10,
+    "validated_band_files": 624,
+    "md5_checks_passed": true
+  },
+  "stages": [
+    {
+      "name": "scene_pair_selection",
+      "status": "passed",
+      "passed": true,
+      "details": {
+        "artifact": "data\\raw\\selected_scene_pair.json",
+        "sha256": "d70fff66706a366fde88aaa977ffd6a7a0756b4ea5ab88168e6b1a312793952c"
+      }
+    },
+    {
+      "name": "raw_band_acquisition",
+      "status": "passed",
+      "passed": true,
+      "details": {
+        "downloaded_asset_count": 14,
+        "expected_asset_count": 14,
+        "artifact": "data\\raw\\band_download_report.json"
+      }
+    },
+    {
+      "name": "raw_raster_validation",
+      "status": "passed",
+      "passed": true,
+      "details": {
+        "status": "success",
+        "validated_rasters": 14,
+        "errors": 0
+      }
+    },
+    {
+      "name": "aoi_alignment",
+      "status": "passed",
+      "passed": true,
+      "details": {
+        "status": "success",
+        "output_count": 14,
+        "grid": {
+          "crs": "EPSG:32644",
+          "epsg": 32644,
+          "resolution_meters": 10.0,
+          "width": 1295,
+          "height": 1347,
+          "transform": [
+            10.0,
+            0.0,
+            213050.0,
+            0.0,
+            -10.0,
+            1933580.0
+          ],
+          "bounds": [
+            213050.0,
+            1920110.0,
+            226000.0,
+            1933580.0
+          ]
+        }
+      }
+    },
+    {
+      "name": "cloud_masking",
+      "status": "passed",
+      "passed": true,
+      "details": {
+        "status": "success",
+        "pair_valid_fraction": 0.9923433455727443,
+        "quality_gate_passed": true
+      }
+    },
+    {
+      "name": "paired_patch_generation",
+      "status": "passed",
+      "passed": true,
+      "details": {
+        "status": "success",
+        "candidate_patches": 25,
+        "accepted_patches": 25,
+        "rejected_patches": 0,
+        "mean_valid_fraction": 0.9926867680000001
+      }
+    },
+    {
+      "name": "geographic_split",
+      "status": "passed",
+      "passed": true,
+      "details": {
+        "status": "success",
+        "train": 15,
+        "validation": 5,
+        "test": 5,
+        "unassigned": 0
+      }
+    },
+    {
+      "name": "oscd_benchmark_acquisition",
+      "status": "passed",
+      "passed": true,
+      "details": {
+        "status": "success",
+        "archives": 3,
+        "md5_checks_passed": true,
+        "image_regions": 24,
+        "train_regions": 14,
+        "test_regions": 10,
+        "band_files": 624
+      }
+    },
+    {
+      "name": "dataset_lineage_manifest",
+      "status": "passed",
+      "passed": true,
+      "details": {
+        "manifest_records": 106,
+        "record_type_counts": {
+          "aligned_satellite_band": 14,
+          "multiband_satellite_patch": 50,
+          "paired_valid_pixel_mask": 1,
+          "patch_valid_mask": 25,
+          "raw_satellite_band": 14,
+          "valid_pixel_mask": 2
+        },
+        "artifact": "data\\manifest.csv"
+      }
+    }
+  ],
+  "source_artifacts": {
+    "selected_pair": "data\\raw\\selected_scene_pair.json",
+    "download_report": "data\\raw\\band_download_report.json",
+    "raw_validation": "data\\raw\\raw_raster_validation.json",
+    "alignment_report": "data\\processed\\aligned\\alignment_report.json",
+    "cloud_mask_report": "data\\processed\\cloud_masks\\cloud_mask_report.json",
+    "tiling_report": "data\\processed\\patches\\tiling_report.json",
+    "split_report": "data\\processed\\splits\\split_report.json",
+    "oscd_manifest": "data\\benchmark\\oscd\\acquisition_manifest.json",
+    "dataset_manifest": "data\\manifest.csv"
+  }
+}

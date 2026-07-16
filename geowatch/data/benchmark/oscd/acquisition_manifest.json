@@ -1,0 +1,308 @@
+{
+  "schema_version": "1.0",
+  "generated_at_utc": "2026-07-16T06:17:17.201133+00:00",
+  "status": "success",
+  "dataset_name": "Onera Satellite Change Detection Dataset",
+  "dataset_short_name": "OSCD",
+  "official_project_page": "https://rcdaudt.github.io/oscd/",
+  "citation_doi": "10.1109/IGARSS.2018.8518015",
+  "sensor": "Sentinel-2",
+  "spectral_band_count": 13,
+  "native_resolutions_meters": [
+    10,
+    20,
+    60
+  ],
+  "archives": [
+    {
+      "key": "images",
+      "filename": "Onera Satellite Change Detection dataset - Images.zip",
+      "source_url": "https://partage.imt.fr/index.php/s/gKRaWgRnLMfwMGo/download",
+      "local_path": "data\\benchmark\\oscd\\archives\\Onera Satellite Change Detection dataset - Images.zip",
+      "download_status": "already_present",
+      "extraction_status": "extracted",
+      "size_bytes": 512716711,
+      "expected_md5": "c50d4a2941da64e03a47ac4dec63d915",
+      "actual_md5": "c50d4a2941da64e03a47ac4dec63d915",
+      "sha256": "940b87887511058a933e67cd6d0e43e2eb825a55d8e79a50983dee7f23003656"
+    },
+    {
+      "key": "train_labels",
+      "filename": "Onera Satellite Change Detection dataset - Train Labels.zip",
+      "source_url": "https://partage.mines-telecom.fr/index.php/s/2D6n03k58ygBSpu/download",
+      "local_path": "data\\benchmark\\oscd\\archives\\Onera Satellite Change Detection dataset - Train Labels.zip",
+      "download_status": "already_present",
+      "extraction_status": "extracted",
+      "size_bytes": 137873,
+      "expected_md5": "4d2965af8170c705ebad3d6ee71b6990",
+      "actual_md5": "4d2965af8170c705ebad3d6ee71b6990",
+      "sha256": "89fb54cd12ad0dbea6c447528139dec305b865294215434bf6dd170fb8fd3ca5"
+    },
+    {
+      "key": "test_labels",
+      "filename": "Onera Satellite Change Detection dataset - Test Labels.zip",
+      "source_url": "https://partage.imt.fr/index.php/s/gpStKn4Mpgfnr63/download",
+      "local_path": "data\\benchmark\\oscd\\archives\\Onera Satellite Change Detection dataset - Test Labels.zip",
+      "download_status": "already_present",
+      "extraction_status": "extracted",
+      "size_bytes": 83614,
+      "expected_md5": "8177d437793c522653c442aa4e66c617",
+      "actual_md5": "8177d437793c522653c442aa4e66c617",
+      "sha256": "2e195eaa1b788b99fa93ea8073e3780bc0b763000b0c49dbf70548acf1e5d67d"
+    }
+  ],
+  "validation": {
+    "image_region_count": 24,
+    "train_region_count": 14,
+    "test_region_count": 10,
+    "total_region_count": 24,
+    "validated_date_rasters": 48,
+    "validated_band_files": 624,
+    "train_regions": [
+      {
+        "region": "abudhabi",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20160120",
+          "date_2: 20180328"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Train Labels\\abudhabi\\cm\\cm.png"
+      },
+      {
+        "region": "aguasclaras",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20150916",
+          "date_2: 20171015"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Train Labels\\aguasclaras\\cm\\cm.png"
+      },
+      {
+        "region": "beihai",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20161209",
+          "date_2: 20180309"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Train Labels\\beihai\\cm\\cm.png"
+      },
+      {
+        "region": "beirut",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20150820",
+          "date_2: 20171003"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Train Labels\\beirut\\cm\\cm.png"
+      },
+      {
+        "region": "bercy",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20161130",
+          "date_2: 20170829"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Train Labels\\bercy\\cm\\cm.png"
+      },
+      {
+        "region": "bordeaux",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20160504",
+          "date_2: 20171026"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Train Labels\\bordeaux\\cm\\cm.png"
+      },
+      {
+        "region": "cupertino",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20150918",
+          "date_2: 20180326"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Train Labels\\cupertino\\cm\\cm.png"
+      },
+      {
+        "region": "hongkong",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20160927",
+          "date_2: 20180323"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Train Labels\\hongkong\\cm\\cm.png"
+      },
+      {
+        "region": "mumbai",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20151130",
+          "date_2: 20180319"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Train Labels\\mumbai\\cm\\cm.png"
+      },
+      {
+        "region": "nantes",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20150821",
+          "date_2: 20171014"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Train Labels\\nantes\\cm\\cm.png"
+      },
+      {
+        "region": "paris",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20161130",
+          "date_2: 20171107"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Train Labels\\paris\\cm\\cm.png"
+      },
+      {
+        "region": "pisa",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20150704",
+          "date_2: 20180211"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Train Labels\\pisa\\cm\\cm.png"
+      },
+      {
+        "region": "rennes",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20150821",
+          "date_2: 20170621"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Train Labels\\rennes\\cm\\cm.png"
+      },
+      {
+        "region": "saclay_e",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20160315",
+          "date_2: 20170829"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Train Labels\\saclay_e\\cm\\cm.png"
+      }
+    ],
+    "test_regions": [
+      {
+        "region": "brasilia",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20150916",
+          "date_2: 20171017"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Test Labels\\brasilia\\cm\\cm.png"
+      },
+      {
+        "region": "chongqing",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20170414",
+          "date_2: 20180402"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Test Labels\\chongqing\\cm\\cm.png"
+      },
+      {
+        "region": "dubai",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20151211",
+          "date_2: 20180330"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Test Labels\\dubai\\cm\\cm.png"
+      },
+      {
+        "region": "lasvegas",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20150820",
+          "date_2: 20180205"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Test Labels\\lasvegas\\cm\\cm.png"
+      },
+      {
+        "region": "milano",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20161228",
+          "date_2: 20180122"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Test Labels\\milano\\cm\\cm.png"
+      },
+      {
+        "region": "montpellier",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20150812",
+          "date_2: 20171030"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Test Labels\\montpellier\\cm\\cm.png"
+      },
+      {
+        "region": "norcia",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20150711",
+          "date_2: 20171018"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Test Labels\\norcia\\cm\\cm.png"
+      },
+      {
+        "region": "rio",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20160424",
+          "date_2: 20171011"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Test Labels\\rio\\cm\\cm.png"
+      },
+      {
+        "region": "saclay_w",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20160315",
+          "date_2: 20170829"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Test Labels\\saclay_w\\cm\\cm.png"
+      },
+      {
+        "region": "valencia",
+        "date_1_band_count": 13,
+        "date_2_band_count": 13,
+        "dates": [
+          "date_1: 20160730",
+          "date_2: 20171107"
+        ],
+        "mask_path": "data\\benchmark\\oscd\\raw\\Onera Satellite Change Detection dataset - Test Labels\\valencia\\cm\\cm.png"
+      }
+    ]
+  },
+  "raw_directory": "data\\benchmark\\oscd\\raw",
+  "dataset_card": "docs\\datasets\\oscd.md"
+}

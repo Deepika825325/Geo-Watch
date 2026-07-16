@@ -1,0 +1,126 @@
+project:
+  name: geowatch
+  dataset_version: 0.1.0
+  random_seed: 42
+paths:
+  raw_dir: data/raw
+  processed_dir: data/processed
+  benchmark_dir: data/benchmark
+  manifest_path: data/manifest.csv
+acquisition:
+  provider: copernicus_data_space
+  collection: sentinel-2-l2a
+  aoi_name: Hyderabad Western Growth Corridor
+  bbox_wgs84:
+  - 78.3
+  - 17.35
+  - 78.42
+  - 17.47
+  start_date: null
+  end_date: null
+  bands:
+  - B02
+  - B03
+  - B04
+  - B08
+  - B11
+  - B12
+  - SCL
+  scene_search_cloud_cover_max_percent: 30.0
+  stac_api_url: https://stac.dataspace.copernicus.eu/v1
+  discovery_output: data/raw/sentinel2_scene_catalog.json
+  periods:
+    before:
+      start_date: '2021-01-01'
+      end_date: '2021-03-31'
+    after:
+      start_date: '2025-01-01'
+      end_date: '2025-03-31'
+  request_timeout_seconds: 60
+  request_retries: 4
+  page_size: 100
+  max_pages: 10
+  max_candidates_per_period: 25
+  scene_selection_output: data/raw/selected_scene_pair.json
+  minimum_aoi_overlap_ratio: 0.99
+  same_mgrs_tile_required: true
+  same_platform_preferred: true
+  s3_endpoint_url: https://eodata.dataspace.copernicus.eu
+  s3_verification_output: data/raw/s3_access_verification.json
+  band_download_report: data/raw/band_download_report.json
+  download_chunk_size_mb: 8
+  required_band_assets:
+  - B02_10m
+  - B03_10m
+  - B04_10m
+  - B08_10m
+  - B11_20m
+  - B12_20m
+  - SCL_20m
+  raw_validation_output: data/raw/raw_raster_validation.json
+processing:
+  target_crs_strategy: auto_utm
+  target_resolution_meters: 10.0
+  patch_size_pixels: 256
+  patch_stride_pixels: 256
+  maximum_cloud_fraction: 0.1
+  minimum_valid_pixel_fraction: 0.9
+  resampling_method_continuous: bilinear
+  resampling_method_categorical: nearest
+  target_epsg: 32644
+  aligned_dir: data/processed/aligned
+  alignment_report: data/processed/aligned/alignment_report.json
+  reference_asset: B02_10m
+  output_compression: deflate
+  cloud_mask_dir: data/processed/cloud_masks
+  cloud_mask_report: data/processed/cloud_masks/cloud_mask_report.json
+  scl_hard_invalid_classes:
+  - 0
+  - 1
+  - 7
+  scl_cloud_classes:
+  - 3
+  - 8
+  - 9
+  - 10
+  - 11
+  cloud_buffer_pixels: 3
+  minimum_pair_valid_fraction: 0.9
+  patches_dir: data/processed/patches
+  patch_index: data/processed/patches/patch_index.csv
+  tiling_report: data/processed/patches/tiling_report.json
+  model_input_assets:
+  - B02_10m
+  - B03_10m
+  - B04_10m
+  - B08_10m
+  - B11_20m
+  - B12_20m
+  minimum_patch_valid_fraction: 0.9
+  edge_policy: drop_incomplete
+  split_dir: data/processed/splits
+  split_report: data/processed/splits/split_report.json
+  geographic_split_axis: column
+  geographic_split_order:
+  - train
+  - validation
+  - test
+  split_ratios:
+    train: 0.6
+    validation: 0.2
+    test: 0.2
+  week1_summary_json: data/processed/week1_summary.json
+  week1_summary_markdown: docs/week1_data_pipeline_summary.md
+splitting:
+  strategy: geographic_tile
+  train_fraction: 0.7
+  validation_fraction: 0.15
+  test_fraction: 0.15
+benchmark:
+  primary_dataset: oscd
+  oscd:
+    root_dir: data/benchmark/oscd
+    archive_dir: data/benchmark/oscd/archives
+    raw_dir: data/benchmark/oscd/raw
+    manifest_path: data/benchmark/oscd/acquisition_manifest.json
+    dataset_card_path: docs/datasets/oscd.md

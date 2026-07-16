@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "generated_at_utc": "2026-07-16T05:40:11.247190+00:00",
+  "status": "success",
+  "source_alignment_report": "data\\processed\\aligned\\alignment_report.json",
+  "source_alignment_report_sha256": "f6e2d12d24f5757f66ef14de46b5409ed3824ab1d49c1c61edffafd76203cc04",
+  "source_cloud_mask_report": "data\\processed\\cloud_masks\\cloud_mask_report.json",
+  "source_cloud_mask_report_sha256": "12ebb8a630dba8f2d2f60b8ee58f3742af4c0f8b8a87f97aca3ab29966933af4",
+  "reference_grid": {
+    "width": 1295,
+    "height": 1347,
+    "epsg": 32644,
+    "crs": "EPSG:32644",
+    "transform": [
+      10.0,
+      0.0,
+      213050.0,
+      0.0,
+      -10.0,
+      1933580.0
+    ]
+  },
+  "input_assets": [
+    "B02_10m",
+    "B03_10m",
+    "B04_10m",
+    "B08_10m",
+    "B11_20m",
+    "B12_20m"
+  ],
+  "input_channel_count": 6,
+  "patch_size_pixels": 256,
+  "patch_stride_pixels": 256,
+  "edge_policy": "drop_incomplete",
+  "minimum_patch_valid_fraction": 0.9,
+  "candidate_patch_count": 25,
+  "accepted_patch_count": 25,
+  "rejected_patch_count": 0,
+  "minimum_accepted_valid_fraction": 0.96929932,
+  "mean_accepted_valid_fraction": 0.9926867680000001,
+  "maximum_accepted_valid_fraction": 1.0,
+  "covered_width_pixels": 1280,
+  "covered_height_pixels": 1280,
+  "dropped_right_border_pixels": 15,
+  "dropped_bottom_border_pixels": 67,
+  "covered_area_fraction": 0.9392529659790239,
+  "patch_index": "data\\processed\\patches\\patch_index.csv",
+  "output_directory": "data\\processed\\patches",
+  "manifest": "data\\manifest.csv"
+}
