@@ -1,0 +1,101 @@
+{
+  "schema_version": "1.0",
+  "generated_at_utc": "2026-07-16T09:09:03.077093+00:00",
+  "status": "success",
+  "baseline": "cva_pca_kmeans",
+  "dataset": "OSCD",
+  "quantitative_scope": "OSCD labelled regions only",
+  "custom_hyderabad_aoi_used_for_metrics": false,
+  "method": {
+    "bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B08"
+    ],
+    "change_vector": "(after-before) / (abs(after)+abs(before)+epsilon)",
+    "standardization": "StandardScaler fitted on training samples only",
+    "pca_components": 3,
+    "pca_fitted_on": "OSCD training image pixels only",
+    "pca_explained_variance_ratio": [
+      0.7841896414756775,
+      0.15125145018100739,
+      0.052274949848651886
+    ],
+    "clustering": "K-Means with two clusters",
+    "kmeans_fitted_on": "OSCD training image pixels only",
+    "change_cluster_rule": "cluster with larger mean original CVA magnitude",
+    "change_cluster": 1,
+    "cluster_mean_cva_magnitude": [
+      0.19873759150505066,
+      0.20110802352428436
+    ],
+    "training_labels_used_for_fitting": false,
+    "test_images_used_for_fitting": false,
+    "test_labels_used_for_fitting": false,
+    "samples_per_train_region": 25000,
+    "sampled_training_vectors": 350000,
+    "random_seed": 42,
+    "kmeans_n_init": 10,
+    "epsilon": 1e-06
+  },
+  "region_counts": {
+    "train": 14,
+    "test": 10,
+    "overall": 24
+  },
+  "train_metrics": {
+    "metric_scope": "positive_change_class",
+    "averaging": "micro_pixel_aggregation",
+    "precision": 0.018944122426238878,
+    "recall": 0.4568475038063947,
+    "f1_score": 0.036379686253655945,
+    "iou": 0.01852684350379734,
+    "accuracy": 0.4439382236775686,
+    "accuracy_role": "secondary_diagnostic_only",
+    "change_prevalence": 0.02297601961955806,
+    "predicted_change_fraction": 0.5540788311240771,
+    "counts": {
+      "true_positive": 68412,
+      "false_positive": 3542840,
+      "false_negative": 81336,
+      "true_negative": 2824990,
+      "ignored_pixels": 0,
+      "evaluated_pixels": 6517578
+    }
+  },
+  "test_metrics": {
+    "metric_scope": "positive_change_class",
+    "averaging": "micro_pixel_aggregation",
+    "precision": 0.06091471927856996,
+    "recall": 0.6692167943825946,
+    "f1_score": 0.11166523401217905,
+    "iou": 0.05913423616588715,
+    "accuracy": 0.4496951853449844,
+    "accuracy_role": "secondary_diagnostic_only",
+    "change_prevalence": 0.05168301095279434,
+    "predicted_change_fraction": 0.5677960815299603,
+    "counts": {
+      "true_positive": 106457,
+      "false_positive": 1641183,
+      "false_negative": 52620,
+      "true_negative": 1277676,
+      "ignored_pixels": 0,
+      "evaluated_pixels": 3077936
+    }
+  },
+  "primary_reported_result": {
+    "split": "OSCD test",
+    "averaging": "micro pixel aggregation",
+    "precision": 0.06091471927856996,
+    "recall": 0.6692167943825946,
+    "f1_score": 0.11166523401217905,
+    "iou": 0.05913423616588715
+  },
+  "outputs": {
+    "region_metrics_csv": "reports\\week2\\baselines\\cva_pca_kmeans\\oscd_region_metrics.csv",
+    "training_pca_figure": "reports\\week2\\baselines\\cva_pca_kmeans\\training_pca_clusters.png",
+    "prediction_directory": "reports\\week2\\baselines\\cva_pca_kmeans\\predictions",
+    "magnitude_preview_directory": "reports\\week2\\baselines\\cva_pca_kmeans\\magnitude_previews"
+  }
+}

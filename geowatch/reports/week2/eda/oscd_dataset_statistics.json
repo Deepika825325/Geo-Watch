@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.0",
+  "generated_at_utc": "2026-07-16T07:21:30.465247+00:00",
+  "status": "success",
+  "dataset": "OSCD",
+  "quantitative_scope": "OSCD labelled regions only",
+  "custom_hyderabad_aoi_used_for_metrics": false,
+  "official_split_preserved": true,
+  "test_label_usage": "Descriptive EDA and final evaluation only; not for threshold or hyperparameter selection.",
+  "label_encoding": {
+    "raw_unchanged_value": 0,
+    "binary_unchanged_value": 0,
+    "binary_changed_value": 1,
+    "binarization_rule": "raw mask value > 0"
+  },
+  "region_counts": {
+    "train": 14,
+    "test": 10,
+    "overall": 24
+  },
+  "train": {
+    "region_count": 14,
+    "total_pixels": 6517578,
+    "changed_pixels": 149748,
+    "unchanged_pixels": 6367830,
+    "pixel_weighted_change_fraction": 0.02297601961955806,
+    "pixel_weighted_unchanged_fraction": 0.9770239803804419,
+    "unchanged_to_change_ratio": 42.52363971472073,
+    "mean_region_change_fraction": 0.019760328134696543,
+    "median_region_change_fraction": 0.021171107979125452,
+    "minimum_region_change_fraction": 0.0028783308195072903,
+    "maximum_region_change_fraction": 0.03761389635133088
+  },
+  "test": {
+    "region_count": 10,
+    "total_pixels": 3077936,
+    "changed_pixels": 159077,
+    "unchanged_pixels": 2918859,
+    "pixel_weighted_change_fraction": 0.05168301095279434,
+    "pixel_weighted_unchanged_fraction": 0.9483169890472056,
+    "unchanged_to_change_ratio": 18.348717916480698,
+    "mean_region_change_fraction": 0.04357281676472728,
+    "median_region_change_fraction": 0.04134144494549541,
+    "minimum_region_change_fraction": 0.004444791016843418,
+    "maximum_region_change_fraction": 0.09922032295665925
+  },
+  "overall": {
+    "region_count": 24,
+    "total_pixels": 9595514,
+    "changed_pixels": 308825,
+    "unchanged_pixels": 9286689,
+    "pixel_weighted_change_fraction": 0.03218431029333082,
+    "pixel_weighted_unchanged_fraction": 0.9678156897066692,
+    "unchanged_to_change_ratio": 30.071040233141748,
+    "mean_region_change_fraction": 0.029682198397209345,
+    "median_region_change_fraction": 0.024276360264478047,
+    "minimum_region_change_fraction": 0.0028783308195072903,
+    "maximum_region_change_fraction": 0.09922032295665925
+  },
+  "representative_regions": [
+    {
+      "region": "aguasclaras",
+      "split": "train",
+      "change_fraction": 0.018659387321807705
+    },
+    {
+      "region": "cupertino",
+      "split": "train",
+      "change_fraction": 0.0236828286364432
+    },
+    {
+      "region": "brasilia",
+      "split": "test",
+      "change_fraction": 0.02581286901027689
+    },
+    {
+      "region": "rio",
+      "split": "test",
+      "change_fraction": 0.05687002088071393
+    }
+  ],
+  "visualization": {
+    "rgb_bands": [
+      "B04",
+      "B03",
+      "B02"
+    ],
+    "lower_percentile": 2.0,
+    "upper_percentile": 98.0
+  },
+  "outputs": {
+    "region_statistics_csv": "reports\\week2\\eda\\oscd_region_statistics.csv",
+    "change_distribution_figure": "reports\\week2\\eda\\oscd_change_fraction_by_region.png",
+    "representative_examples_figure": "reports\\week2\\eda\\oscd_representative_examples.png"
+  }
+}

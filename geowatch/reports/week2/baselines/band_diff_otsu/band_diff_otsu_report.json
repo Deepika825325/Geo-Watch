@@ -1,0 +1,90 @@
+{
+  "schema_version": "1.0",
+  "generated_at_utc": "2026-07-16T07:29:59.788779+00:00",
+  "status": "success",
+  "baseline": "band_difference_otsu",
+  "dataset": "OSCD",
+  "quantitative_scope": "OSCD labelled regions only",
+  "custom_hyderabad_aoi_used_for_metrics": false,
+  "method": {
+    "bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B08"
+    ],
+    "difference": "abs(after-before) / (abs(after)+abs(before)+epsilon)",
+    "band_fusion": "mean across selected bands",
+    "threshold_method": "global Otsu",
+    "threshold_value": 0.12109375,
+    "threshold_source": "OSCD training image pixels only",
+    "training_labels_used_for_threshold": false,
+    "test_images_used_for_threshold": false,
+    "test_labels_used_for_threshold": false,
+    "morphological_postprocessing": false,
+    "epsilon": 1e-06,
+    "histogram_bins": 512,
+    "samples_per_train_region": 250000,
+    "random_seed": 42,
+    "sampled_training_pixels": 3227789
+  },
+  "region_counts": {
+    "train": 14,
+    "test": 10,
+    "overall": 24
+  },
+  "train_metrics": {
+    "metric_scope": "positive_change_class",
+    "averaging": "micro_pixel_aggregation",
+    "precision": 0.052671724684333,
+    "recall": 0.5362943077703876,
+    "f1_score": 0.09592249661979771,
+    "iou": 0.0503774118697962,
+    "accuracy": 0.7677299757670718,
+    "accuracy_role": "secondary_diagnostic_only",
+    "change_prevalence": 0.02297601961955806,
+    "predicted_change_fraction": 0.23393782168774965,
+    "counts": {
+      "true_positive": 80309,
+      "false_positive": 1444399,
+      "false_negative": 69439,
+      "true_negative": 4923431,
+      "ignored_pixels": 0,
+      "evaluated_pixels": 6517578
+    }
+  },
+  "test_metrics": {
+    "metric_scope": "positive_change_class",
+    "averaging": "micro_pixel_aggregation",
+    "precision": 0.11584620749683167,
+    "recall": 0.5137134846646593,
+    "f1_score": 0.18905835198584145,
+    "iou": 0.10439781546421385,
+    "accuracy": 0.7722321061906421,
+    "accuracy_role": "secondary_diagnostic_only",
+    "change_prevalence": 0.05168301095279434,
+    "predicted_change_fraction": 0.2291854021656071,
+    "counts": {
+      "true_positive": 81720,
+      "false_positive": 623698,
+      "false_negative": 77357,
+      "true_negative": 2295161,
+      "ignored_pixels": 0,
+      "evaluated_pixels": 3077936
+    }
+  },
+  "primary_reported_result": {
+    "split": "OSCD test",
+    "averaging": "micro pixel aggregation",
+    "precision": 0.11584620749683167,
+    "recall": 0.5137134846646593,
+    "f1_score": 0.18905835198584145,
+    "iou": 0.10439781546421385
+  },
+  "outputs": {
+    "region_metrics_csv": "reports\\week2\\baselines\\band_diff_otsu\\oscd_region_metrics.csv",
+    "training_histogram": "reports\\week2\\baselines\\band_diff_otsu\\training_difference_histogram.png",
+    "prediction_directory": "reports\\week2\\baselines\\band_diff_otsu\\predictions",
+    "difference_preview_directory": "reports\\week2\\baselines\\band_diff_otsu\\difference_previews"
+  }
+}
