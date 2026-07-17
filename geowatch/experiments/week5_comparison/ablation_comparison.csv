@@ -1,0 +1,5 @@
+experiment,loss,checkpoint_epoch,selection,threshold,precision,recall,f1,iou
+frozen_otsu_baseline,otsu,,frozen_week2_baseline,,,,0.189058,0.104398
+week5_full_dice_focal,dice_focal,24,best_validation_f1_at_0.50_then_validation_threshold_search,0.76,0.42527786121958544,0.4213463291233422,0.42330296659658956,0.2684745119884323
+week5_ablation_bce_protocol_checkpoint,plain_bce,1,best_validation_f1_at_0.50,0.2,0.032813310628116626,1.0,0.0635416106482223,0.032813310628116626
+week5_ablation_bce_diagnostic,plain_bce,11,final_checkpoint_with_lowest_observed_validation_bce_then_threshold_search,0.24,0.2616320440720762,0.42402485072822305,0.3235976747982483,0.19303103433676277

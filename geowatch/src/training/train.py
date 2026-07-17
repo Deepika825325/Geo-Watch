@@ -43,7 +43,11 @@ from src.training.augmentation import (
     PairedGeometricAugmentation,
     build_augmentation_from_config,
 )
-from src.training.losses import DiceFocalLoss, build_loss_from_config
+from src.training.losses import (
+    BinaryBCELoss,
+    DiceFocalLoss,
+    build_loss_from_config,
+)
 
 
 LOGGER = logging.getLogger("geowatch.training")
@@ -65,7 +69,7 @@ class TrainingRuntime:
     train_loader: DataLoader
     validation_loader: DataLoader
     model: SiameseUNet
-    criterion: DiceFocalLoss
+    criterion: DiceFocalLoss | BinaryBCELoss
     optimizer: Optimizer
     scheduler: LRScheduler
     scaler: torch.amp.GradScaler

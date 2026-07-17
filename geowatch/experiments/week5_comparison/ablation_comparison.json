@@ -1,0 +1,72 @@
+{
+  "primary_ablation_comparison": {
+    "bce_diagnostic_experiment": "week5_ablation_bce_diagnostic",
+    "conclusion": "Dice+Focal outperforms plain BCE primarily through substantially improved precision while maintaining similar recall.",
+    "main_experiment": "week5_full_dice_focal",
+    "main_minus_bce": {
+      "f1": 0.09970529179834126,
+      "iou": 0.07544347765166953,
+      "precision": 0.16364581714750925,
+      "recall": -0.002678521604880857
+    },
+    "main_relative_f1_multiplier": 1.3081149821626623
+  },
+  "protocol": {
+    "benchmark": "OSCD",
+    "official_test_labels_accessed": false,
+    "official_test_regions_accessed": false,
+    "train_regions": 11,
+    "validation_regions": [
+      "hongkong",
+      "mumbai",
+      "paris"
+    ]
+  },
+  "results": [
+    {
+      "checkpoint_epoch": "",
+      "experiment": "frozen_otsu_baseline",
+      "f1": 0.189058,
+      "iou": 0.104398,
+      "loss": "otsu",
+      "precision": "",
+      "recall": "",
+      "selection": "frozen_week2_baseline",
+      "threshold": ""
+    },
+    {
+      "checkpoint_epoch": 24,
+      "experiment": "week5_full_dice_focal",
+      "f1": 0.42330296659658956,
+      "iou": 0.2684745119884323,
+      "loss": "dice_focal",
+      "precision": 0.42527786121958544,
+      "recall": 0.4213463291233422,
+      "selection": "best_validation_f1_at_0.50_then_validation_threshold_search",
+      "threshold": 0.76
+    },
+    {
+      "checkpoint_epoch": 1,
+      "experiment": "week5_ablation_bce_protocol_checkpoint",
+      "f1": 0.0635416106482223,
+      "iou": 0.032813310628116626,
+      "loss": "plain_bce",
+      "precision": 0.032813310628116626,
+      "recall": 1.0,
+      "selection": "best_validation_f1_at_0.50",
+      "threshold": 0.2
+    },
+    {
+      "checkpoint_epoch": 11,
+      "experiment": "week5_ablation_bce_diagnostic",
+      "f1": 0.3235976747982483,
+      "iou": 0.19303103433676277,
+      "loss": "plain_bce",
+      "precision": 0.2616320440720762,
+      "recall": 0.42402485072822305,
+      "selection": "final_checkpoint_with_lowest_observed_validation_bce_then_threshold_search",
+      "threshold": 0.24
+    }
+  ],
+  "selection_note": "The BCE protocol checkpoint is epoch 1 because validation F1 at threshold 0.50 remained zero. Epoch 11 is reported separately as a diagnostic upper-bound checkpoint because it had the lowest observed validation BCE and meaningful performance after validation-only threshold tuning."
+}

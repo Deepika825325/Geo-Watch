@@ -1,4 +1,4 @@
-﻿"""Imbalance-aware binary segmentation losses for GeoWatch.
+"""Imbalance-aware binary segmentation losses for GeoWatch.
 
 OSCD contains approximately thirty unchanged pixels for every changed pixel.
 Plain binary cross-entropy is therefore dominated by easy background pixels.
@@ -360,6 +360,68 @@ class BinaryFocalLoss(nn.Module):
         )
 
 
+class BinaryBCELoss(nn.Module):
+    """Unweighted binary cross-entropy loss calculated from raw logits."""
+
+    def __init__(
+        self,
+        reduction: str = "mean",
+    ) -> None:
+        """Initialize numerically stable plain binary cross-entropy."""
+
+        super().__init__()
+
+        if reduction not in {
+            "mean",
+            "sum",
+        }:
+            raise LossConfigurationError(
+                "Plain BCE reduction must be 'mean' or 'sum'."
+            )
+
+        self.reduction = reduction
+
+    def compute_breakdown(
+        self,
+        logits: Tensor,
+        targets: Tensor,
+    ) -> LossBreakdown:
+        """Return BCE as the total objective with inactive components."""
+
+        validate_binary_segmentation_tensors(
+            logits=logits,
+            targets=targets,
+        )
+
+        bce_value = functional.binary_cross_entropy_with_logits(
+            logits,
+            targets,
+            reduction=self.reduction,
+        )
+
+        inactive_component = torch.zeros_like(
+            bce_value
+        )
+
+        return LossBreakdown(
+            total=bce_value,
+            dice=inactive_component,
+            focal=inactive_component,
+        )
+
+    def forward(
+        self,
+        logits: Tensor,
+        targets: Tensor,
+    ) -> Tensor:
+        """Return unweighted BCE-with-logits."""
+
+        return self.compute_breakdown(
+            logits=logits,
+            targets=targets,
+        ).total
+
+
 class DiceFocalLoss(nn.Module):
     """Weighted combination of foreground Dice and binary focal loss."""
 
@@ -477,8 +539,8 @@ def require_mapping(
 
 def build_loss_from_config(
     config: Mapping[str, Any],
-) -> DiceFocalLoss:
-    """Build Dice–Focal loss from the root or loss-only YAML mapping."""
+) -> DiceFocalLoss | BinaryBCELoss:
+    """Build the configured binary segmentation objective."""
     loss_config_value = config.get(
         "loss",
         config,
@@ -495,9 +557,19 @@ def build_loss_from_config(
         )
     ).strip().lower()
 
+    if loss_name == "bce":
+        return BinaryBCELoss(
+            reduction=str(
+                loss_config.get(
+                    "reduction",
+                    "mean",
+                )
+            )
+        )
+
     if loss_name != "dice_focal":
         raise LossConfigurationError(
-            "GeoWatch Week 4 requires loss.name='dice_focal'; "
+            "loss.name must be either 'dice_focal' or 'bce'; "
             f"received '{loss_name}'."
         )
 

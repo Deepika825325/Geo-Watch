@@ -1,0 +1,37 @@
+{
+  "controlled_change": {
+    "from": "dice_focal",
+    "to": "plain_bce"
+  },
+  "experiment": "week5_ablation_bce",
+  "frozen_fields": {
+    "batch_size": 16,
+    "epochs": 50,
+    "learning_rate": 0.0001,
+    "train_regions": [
+      "abudhabi",
+      "aguasclaras",
+      "beihai",
+      "beirut",
+      "bercy",
+      "bordeaux",
+      "cupertino",
+      "nantes",
+      "pisa",
+      "rennes",
+      "saclay_e"
+    ],
+    "training_metric_threshold": 0.5,
+    "validation_regions": [
+      "hongkong",
+      "mumbai",
+      "paris"
+    ]
+  },
+  "output_config": "experiments/run_ablation_bce/train_config.yaml",
+  "protocol": {
+    "official_test_labels_accessed": false,
+    "official_test_regions_accessed": false
+  },
+  "source_config": "experiments/run_full/train_config.yaml"
+}

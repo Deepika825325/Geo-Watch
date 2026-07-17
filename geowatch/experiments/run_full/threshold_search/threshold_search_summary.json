@@ -1,0 +1,55 @@
+{
+  "best_threshold_metrics": {
+    "accuracy": 0.9623284912109376,
+    "f1": 0.42330296659658956,
+    "false_negative": 31109,
+    "false_positive": 30612,
+    "iou": 0.2684745119884323,
+    "precision": 0.42527786121958544,
+    "recall": 0.4213463291233422,
+    "threshold": 0.76,
+    "true_negative": 1554027,
+    "true_positive": 22652
+  },
+  "checkpoint": {
+    "epoch": 24,
+    "path": "experiments/run_full/checkpoints/best_model_epoch24.pt",
+    "sha256": "61e53ba86bc108d6ccbbb636c8da88c967e07da41471504878c74df6a903ea94"
+  },
+  "default_threshold_metrics": {
+    "accuracy": 0.95077880859375,
+    "f1": 0.4058148273677075,
+    "false_negative": 26222,
+    "false_positive": 54422,
+    "iou": 0.2545594039728978,
+    "precision": 0.3360012688961823,
+    "recall": 0.5122486560889864,
+    "threshold": 0.5,
+    "true_negative": 1530217,
+    "true_positive": 27539
+  },
+  "improvement_from_default": {
+    "f1": 0.017488139228882038,
+    "iou": 0.013915108015534527,
+    "precision": 0.08927659232340313,
+    "recall": -0.09090232696564421
+  },
+  "protocol": {
+    "official_test_labels_accessed": false,
+    "official_test_regions_accessed": false,
+    "validation_regions": [
+      "hongkong",
+      "mumbai",
+      "paris"
+    ]
+  },
+  "search": {
+    "evaluated_thresholds": 91,
+    "maximum_threshold": 0.95,
+    "minimum_threshold": 0.05,
+    "objective": "f1",
+    "positive_validation_pixels": 53761,
+    "step": 0.01,
+    "validation_pixels": 1638400
+  }
+}

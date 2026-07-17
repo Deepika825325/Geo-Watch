@@ -1,4 +1,4 @@
-﻿"""Tests for GeoWatch imbalance-aware segmentation losses."""
+"""Tests for GeoWatch imbalance-aware segmentation losses."""
 
 from __future__ import annotations
 
@@ -10,6 +10,7 @@ import torch.nn.functional as functional
 import yaml
 
 from src.training.losses import (
+    BinaryBCELoss,
     BinaryDiceLoss,
     BinaryFocalLoss,
     DiceFocalLoss,
@@ -379,3 +380,94 @@ def test_invalid_hyperparameters_are_rejected() -> None:
             dice_weight=0.0,
             focal_weight=0.0,
         )
+
+def test_plain_bce_matches_pytorch_reference() -> None:
+    """GeoWatch plain BCE must equal PyTorch BCE-with-logits exactly."""
+
+    logits = torch.tensor(
+        [
+            [
+                [
+                    [
+                        -1.0,
+                        0.5,
+                        2.0,
+                    ]
+                ]
+            ]
+        ],
+        dtype=torch.float32,
+        requires_grad=True,
+    )
+    targets = torch.tensor(
+        [
+            [
+                [
+                    [
+                        0.0,
+                        1.0,
+                        1.0,
+                    ]
+                ]
+            ]
+        ],
+        dtype=torch.float32,
+    )
+
+    criterion = BinaryBCELoss(
+        reduction="mean"
+    )
+
+    breakdown = criterion.compute_breakdown(
+        logits=logits,
+        targets=targets,
+    )
+
+    expected = functional.binary_cross_entropy_with_logits(
+        logits,
+        targets,
+        reduction="mean",
+    )
+
+    torch.testing.assert_close(
+        breakdown.total,
+        expected,
+        rtol=1.0e-7,
+        atol=1.0e-7,
+    )
+    assert float(
+        breakdown.dice.item()
+    ) == pytest.approx(
+        0.0
+    )
+    assert float(
+        breakdown.focal.item()
+    ) == pytest.approx(
+        0.0
+    )
+
+    breakdown.total.backward()
+
+    assert logits.grad is not None
+    assert torch.isfinite(
+        logits.grad
+    ).all()
+
+
+def test_plain_bce_is_built_from_config() -> None:
+    """The loss factory must construct exact unweighted BCE."""
+
+    criterion = build_loss_from_config(
+        {
+            "loss": {
+                "name": "bce",
+                "reduction": "mean",
+            }
+        }
+    )
+
+    assert isinstance(
+        criterion,
+        BinaryBCELoss,
+    )
+    assert criterion.reduction == "mean"
