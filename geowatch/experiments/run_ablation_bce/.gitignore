@@ -1,0 +1,5 @@
+checkpoints/
+logs/
+predictions/
+console.log
+gpu_usage.csv

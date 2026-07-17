@@ -1,4 +1,4 @@
-﻿"""Tests for GeoWatch checkpointing, resumption and early stopping."""
+"""Tests for GeoWatch checkpointing, resumption and early stopping."""
 
 from __future__ import annotations
 
@@ -20,7 +20,9 @@ from src.training.train import (
     TrainingConfigurationError,
     TrainingRuntime,
     build_early_stopping_from_config,
+    capture_random_states,
     load_training_checkpoint,
+    restore_random_states,
     update_epoch_checkpoints,
 )
 
@@ -358,3 +360,63 @@ def test_configuration_mismatch_is_rejected(
             runtime=runtime,
             strict_config=True,
         )
+
+def test_restore_random_states_normalizes_cpu_rng_dtype() -> None:
+    states = capture_random_states()
+
+    states[
+        "torch_cpu"
+    ] = states[
+        "torch_cpu"
+    ].to(
+        dtype=torch.int16
+    )
+
+    restore_random_states(
+        states
+    )
+
+    restored_state = torch.get_rng_state()
+
+    assert restored_state.dtype == torch.uint8
+    assert restored_state.device.type == "cpu"
+
+
+@pytest.mark.skipif(
+    not torch.cuda.is_available(),
+    reason="CUDA is unavailable.",
+)
+def test_restore_random_states_normalizes_cuda_mapped_tensors() -> None:
+    states = capture_random_states()
+
+    states[
+        "torch_cpu"
+    ] = states[
+        "torch_cpu"
+    ].to(
+        device="cuda"
+    )
+
+    cuda_states = states[
+        "torch_cuda"
+    ]
+
+    assert cuda_states is not None
+
+    states[
+        "torch_cuda"
+    ] = [
+        state.to(
+            device="cuda"
+        )
+        for state in cuda_states
+    ]
+
+    restore_random_states(
+        states
+    )
+
+    restored_state = torch.get_rng_state()
+
+    assert restored_state.dtype == torch.uint8
+    assert restored_state.device.type == "cpu"

@@ -2038,10 +2038,39 @@ def capture_random_states() -> dict[str, Any]:
     return states
 
 
+def normalize_rng_state_tensor(
+    state: Any,
+    field_name: str,
+) -> Tensor:
+    if not isinstance(
+        state,
+        Tensor,
+    ):
+        raise TrainingConfigurationError(
+            f"{field_name} RNG state must be a tensor."
+        )
+
+    normalized = (
+        state
+        .detach()
+        .to(
+            device="cpu",
+            dtype=torch.uint8,
+        )
+        .contiguous()
+    )
+
+    if normalized.ndim != 1:
+        raise TrainingConfigurationError(
+            f"{field_name} RNG state must be one-dimensional."
+        )
+
+    return normalized
+
+
 def restore_random_states(
     states: Mapping[str, Any],
 ) -> None:
-    """Restore random states saved inside a training checkpoint."""
     random.setstate(
         states[
             "python"
@@ -2052,10 +2081,14 @@ def restore_random_states(
             "numpy"
         ]
     )
+
     torch.set_rng_state(
-        states[
-            "torch_cpu"
-        ]
+        normalize_rng_state_tensor(
+            states[
+                "torch_cpu"
+            ],
+            "torch_cpu",
+        )
     )
 
     cuda_states = states.get(
@@ -2066,8 +2099,41 @@ def restore_random_states(
         cuda_states is not None
         and torch.cuda.is_available()
     ):
+        if not isinstance(
+            cuda_states,
+            (
+                list,
+                tuple,
+            ),
+        ):
+            raise TrainingConfigurationError(
+                "torch_cuda RNG states must be a sequence."
+            )
+
+        normalized_cuda_states = [
+            normalize_rng_state_tensor(
+                state,
+                f"torch_cuda[{index}]",
+            )
+            for index, state
+            in enumerate(
+                cuda_states
+            )
+        ]
+
+        if (
+            len(
+                normalized_cuda_states
+            )
+            != torch.cuda.device_count()
+        ):
+            raise TrainingConfigurationError(
+                "The checkpoint CUDA RNG-state count does not match "
+                "the available CUDA device count."
+            )
+
         torch.cuda.set_rng_state_all(
-            cuda_states
+            normalized_cuda_states
         )
 
 

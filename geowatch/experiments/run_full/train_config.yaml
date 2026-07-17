@@ -1,0 +1,145 @@
+project:
+  name: geowatch
+  experiment_name: week5_full_dice_focal
+  description: Siamese U-Net training on OSCD with Dice and Focal loss
+  seed: 42
+protocol:
+  benchmark: oscd
+  training_only: true
+  geographic_holdout: true
+  official_test_regions_sealed: true
+  mask_binarization: greater_than_zero
+  positive_class: change
+  prediction_threshold: 0.5
+paths:
+  oscd_raw_root: data/benchmark/oscd/raw
+  checkpoint_directory: experiments/run_full/checkpoints
+  log_directory: experiments/run_full/logs
+  prediction_directory: experiments/run_full/predictions
+dataset:
+  bands:
+  - B02
+  - B03
+  - B04
+  - B08
+  input_channels: 4
+  patch_size: 256
+  stride: 256
+  reflectance_scale: 10000.0
+  clip_minimum: 0.0
+  clip_maximum: 1.0
+  train_regions:
+  - abudhabi
+  - aguasclaras
+  - beihai
+  - beirut
+  - bercy
+  - bordeaux
+  - cupertino
+  - nantes
+  - pisa
+  - rennes
+  - saclay_e
+  validation_regions:
+  - hongkong
+  - mumbai
+  - paris
+  loader:
+    batch_size: 16
+    validation_batch_size: 16
+    num_workers: 4
+    pin_memory: true
+    persistent_workers: true
+    prefetch_factor: 2
+    drop_last_training_batch: false
+augmentation:
+  enabled: true
+  horizontal_flip_probability: 0.5
+  vertical_flip_probability: 0.5
+  rotate_90_probability: 0.5
+  spectral_augmentation_enabled: false
+  color_jitter_enabled: false
+  brightness_adjustment_enabled: false
+  contrast_adjustment_enabled: false
+model:
+  architecture: siamese_unet
+  encoder: resnet18
+  pretrained_encoder: true
+  shared_encoder: true
+  fusion: absolute_difference
+  decoder_channels:
+  - 256
+  - 128
+  - 64
+  - 64
+  head_channels: 32
+  preferred_norm_groups: 8
+  dropout_probability: 0.1
+  output_channels: 1
+  output_activation: none
+loss:
+  name: dice_focal
+  dice:
+    weight: 0.5
+    smooth: 1.0
+    epsilon: 1.0e-07
+    include_background: false
+  focal:
+    weight: 0.5
+    alpha: 0.75
+    gamma: 2.0
+    reduction: mean
+optimizer:
+  name: adamw
+  learning_rate: 0.0001
+  weight_decay: 0.0001
+  betas:
+  - 0.9
+  - 0.999
+scheduler:
+  name: cosine_annealing
+  minimum_learning_rate: 1.0e-06
+training:
+  epochs: 50
+  device: cuda
+  mixed_precision: true
+  gradient_accumulation_steps: 1
+  maximum_gradient_norm: 1.0
+  log_interval_batches: 10
+  early_stopping:
+    enabled: true
+    monitor: validation_f1
+    mode: max
+    patience: 10
+    minimum_delta: 0.0001
+checkpointing:
+  monitor: validation_f1
+  mode: max
+  save_best_only: true
+  save_last: true
+  filename: best_model.pt
+metrics:
+  threshold: 0.5
+  epsilon: 1.0e-07
+  primary:
+  - precision
+  - recall
+  - f1
+  - iou
+  secondary:
+  - pixel_accuracy
+tracking:
+  provider: wandb
+  enabled: true
+  project: geowatch-change-detection
+  entity: null
+  group: week4
+  job_type: training
+  mode: offline
+  log_model: false
+  log_validation_predictions_every_epochs: 1
+  maximum_prediction_samples: 4
+reproducibility:
+  deterministic_algorithms: true
+  cudnn_benchmark: false
+  save_resolved_config: true
