@@ -92,3 +92,7 @@ data/**/*.zip
 data/**/*.tar
 data/**/*.tar.gz
 data/**/*.7z
+
+# Local training data and generated artifacts
+data/
+*.pyc
