@@ -100,3 +100,5 @@ data/
 artifacts/inference/
 data/qualitative/hyderabad/
 !.env.week7.example
+
+!deploy/model.onnx

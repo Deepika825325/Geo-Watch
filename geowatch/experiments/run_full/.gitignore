@@ -3,3 +3,7 @@ logs/
 predictions/
 console.log
 gpu_usage*.csv
+
+!checkpoints/
+checkpoints/*
+!checkpoints/best_model_epoch24.pt
