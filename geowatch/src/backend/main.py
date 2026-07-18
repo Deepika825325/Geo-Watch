@@ -306,6 +306,10 @@ def create_lifespan(
                 "auto",
             )
 
+            backend = environ.get(
+                "MODEL_BACKEND"
+            )
+
             batch_size = int(
                 environ.get(
                     "GEOWATCH_BATCH_SIZE",
@@ -314,6 +318,7 @@ def create_lifespan(
             )
 
             app.state.predictor = FrozenChangePredictor(
+                backend=backend,
                 device=device,
                 batch_size=batch_size,
             )
@@ -393,6 +398,15 @@ def create_app(
             model_loaded=(
                 predictor
                 is not None
+            ),
+            model_backend=(
+                getattr(
+                    predictor,
+                    "backend",
+                    None,
+                )
+                if predictor is not None
+                else None
             ),
             database_connected=database_connected,
         )

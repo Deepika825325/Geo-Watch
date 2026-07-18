@@ -1,23 +1,17 @@
 from __future__ import annotations
 
 import hashlib
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 import numpy as np
 import rasterio
-import torch
 from affine import Affine
 from numpy.typing import NDArray
 from rasterio.crs import CRS
 from rasterio.windows import Window
-from torch import Tensor, nn
-
-from src.training.train import (
-    build_model,
-    load_training_config,
-)
 
 
 FROZEN_BANDS = (
@@ -33,11 +27,55 @@ FROZEN_CHECKPOINT_SHA256 = (
     "61e53ba86bc108d6ccbbb636c8da88c967e07da41471504878c74df6a903ea94"
 )
 
+FROZEN_ONNX_SHA256 = (
+    "af1f06d4eeebd3d2dac5e17196b549e0790220818bc5311051be70d9f90b3370"
+)
+
 FROZEN_PATCH_SIZE = 256
 FROZEN_STRIDE = 256
 FROZEN_REFLECTANCE_SCALE = 10_000.0
 FROZEN_CLIP_MINIMUM = 0.0
 FROZEN_CLIP_MAXIMUM = 1.0
+
+
+class InferenceBackend:
+    CUDA = "cuda"
+    ONNX_CPU = "onnx_cpu"
+
+
+def resolve_backend(
+    configured: str | None = None,
+) -> str:
+    selected = (
+        configured
+        if configured is not None
+        else os.environ.get(
+            "MODEL_BACKEND",
+            "",
+        )
+    ).strip().lower()
+
+    if selected:
+        if selected not in {
+            InferenceBackend.CUDA,
+            InferenceBackend.ONNX_CPU,
+        }:
+            raise ValueError(
+                f"Unsupported model backend: {selected}"
+            )
+
+        return selected
+
+    try:
+        import torch
+    except ModuleNotFoundError:
+        return InferenceBackend.ONNX_CPU
+
+    return (
+        InferenceBackend.CUDA
+        if torch.cuda.is_available()
+        else InferenceBackend.ONNX_CPU
+    )
 
 
 class FrozenProtocolError(RuntimeError):
@@ -445,7 +483,8 @@ def extract_padded_patch(
 
 def extract_logits(
     output: Any,
-) -> Tensor:
+) -> Any:
+    from torch import Tensor
     if isinstance(
         output,
         Tensor,
@@ -514,10 +553,10 @@ def extract_logits(
 
 
 def run_tiled_inference(
-    model: nn.Module,
+    model: Any,
     before: NDArray[np.float32],
     after: NDArray[np.float32],
-    device: torch.device,
+    device: Any,
     batch_size: int,
     threshold: float = FROZEN_THRESHOLD,
     patch_size: int = FROZEN_PATCH_SIZE,
@@ -527,6 +566,8 @@ def run_tiled_inference(
     NDArray[np.uint8],
     int,
 ]:
+    import torch
+
     if before.shape != after.shape:
         raise ValueError(
             "Before and after arrays must have identical shapes."
@@ -768,6 +809,266 @@ def run_tiled_inference(
     )
 
 
+def sigmoid_numpy(
+    logits: NDArray[np.float32],
+) -> NDArray[np.float32]:
+    clipped = np.clip(
+        logits,
+        -80.0,
+        80.0,
+    )
+
+    return (
+        np.float32(
+            1.0
+        )
+        / (
+            np.float32(
+                1.0
+            )
+            + np.exp(
+                -clipped
+            )
+        )
+    ).astype(
+        np.float32,
+        copy=False,
+    )
+
+
+def run_tiled_onnx_inference(
+    session: Any,
+    before: NDArray[np.float32],
+    after: NDArray[np.float32],
+    batch_size: int,
+    threshold: float = FROZEN_THRESHOLD,
+    patch_size: int = FROZEN_PATCH_SIZE,
+    stride: int = FROZEN_STRIDE,
+) -> tuple[
+    NDArray[np.float32],
+    NDArray[np.uint8],
+    int,
+]:
+    if before.shape != after.shape:
+        raise ValueError(
+            "Before and after arrays must have identical shapes."
+        )
+
+    if before.ndim != 3:
+        raise ValueError(
+            "Input arrays must have shape bands, height, width."
+        )
+
+    if before.shape[0] != len(FROZEN_BANDS):
+        raise ValueError(
+            "Frozen model requires four input bands."
+        )
+
+    if batch_size <= 0:
+        raise ValueError(
+            "Batch size must be positive."
+        )
+
+    if threshold != FROZEN_THRESHOLD:
+        raise FrozenProtocolError(
+            "Inference threshold must remain frozen at 0.76."
+        )
+
+    height = int(
+        before.shape[1]
+    )
+
+    width = int(
+        before.shape[2]
+    )
+
+    row_starts = calculate_starts(
+        height,
+        patch_size,
+        stride,
+    )
+
+    column_starts = calculate_starts(
+        width,
+        patch_size,
+        stride,
+    )
+
+    coordinates = tuple(
+        (
+            row,
+            column,
+        )
+        for row in row_starts
+        for column in column_starts
+    )
+
+    probability = np.zeros(
+        (
+            height,
+            width,
+        ),
+        dtype=np.float32,
+    )
+
+    for offset in range(
+        0,
+        len(coordinates),
+        batch_size,
+    ):
+        batch_coordinates = coordinates[
+            offset:offset
+            + batch_size
+        ]
+
+        before_patches: list[
+            NDArray[np.float32]
+        ] = []
+
+        after_patches: list[
+            NDArray[np.float32]
+        ] = []
+
+        valid_shapes: list[
+            tuple[int, int]
+        ] = []
+
+        for row, column in batch_coordinates:
+            before_patch, valid_height, valid_width = (
+                extract_padded_patch(
+                    before,
+                    row,
+                    column,
+                    patch_size,
+                )
+            )
+
+            after_patch, after_height, after_width = (
+                extract_padded_patch(
+                    after,
+                    row,
+                    column,
+                    patch_size,
+                )
+            )
+
+            if after_height != valid_height:
+                raise RuntimeError(
+                    "Before and after patch heights differ."
+                )
+
+            if after_width != valid_width:
+                raise RuntimeError(
+                    "Before and after patch widths differ."
+                )
+
+            before_patches.append(
+                before_patch
+            )
+
+            after_patches.append(
+                after_patch
+            )
+
+            valid_shapes.append(
+                (
+                    valid_height,
+                    valid_width,
+                )
+            )
+
+        before_batch = np.ascontiguousarray(
+            np.stack(
+                before_patches
+            ).astype(
+                np.float32,
+                copy=False,
+            )
+        )
+
+        after_batch = np.ascontiguousarray(
+            np.stack(
+                after_patches
+            ).astype(
+                np.float32,
+                copy=False,
+            )
+        )
+
+        raw_outputs = session.run(
+            [
+                "logits",
+            ],
+            {
+                "before": before_batch,
+                "after": after_batch,
+            },
+        )
+
+        if len(raw_outputs) != 1:
+            raise RuntimeError(
+                "ONNX session returned an unexpected output count."
+            )
+
+        logits = np.asarray(
+            raw_outputs[0],
+            dtype=np.float32,
+        )
+
+        expected_shape = (
+            len(batch_coordinates),
+            1,
+            patch_size,
+            patch_size,
+        )
+
+        if tuple(logits.shape) != expected_shape:
+            raise RuntimeError(
+                "Unexpected ONNX output shape: "
+                f"{tuple(logits.shape)}"
+            )
+
+        batch_probabilities = sigmoid_numpy(
+            logits
+        )
+
+        for index, (
+            row,
+            column,
+        ) in enumerate(
+            batch_coordinates
+        ):
+            valid_height, valid_width = valid_shapes[
+                index
+            ]
+
+            probability[
+                row:row
+                + valid_height,
+                column:column
+                + valid_width,
+            ] = batch_probabilities[
+                index,
+                0,
+                :valid_height,
+                :valid_width,
+            ]
+
+    mask = (
+        probability
+        >= threshold
+    ).astype(
+        np.uint8,
+        copy=False,
+    )
+
+    return (
+        probability,
+        mask,
+        len(coordinates),
+    )
+
+
 class FrozenChangePredictor:
     def __init__(
         self,
@@ -778,6 +1079,10 @@ class FrozenChangePredictor:
             "experiments/run_full/checkpoints/"
             "best_model_epoch24.pt"
         ),
+        onnx_model_path: Path = Path(
+            "deploy/model.onnx"
+        ),
+        backend: str | None = None,
         device: str = "auto",
         batch_size: int = 8,
     ) -> None:
@@ -785,6 +1090,123 @@ class FrozenChangePredictor:
             raise ValueError(
                 "Batch size must be positive."
             )
+
+        selected_backend = resolve_backend(
+            backend
+        )
+
+        self._backend = selected_backend
+        self._batch_size = batch_size
+        self._checkpoint_path = checkpoint_path
+        self._checkpoint_sha256 = FROZEN_CHECKPOINT_SHA256
+        self._onnx_model_path = onnx_model_path
+        self._onnx_model_sha256: str | None = None
+        self._model: Any = None
+        self._session: Any = None
+        self._device: Any = None
+
+        if selected_backend == InferenceBackend.ONNX_CPU:
+            self._initialize_onnx(
+                onnx_model_path=onnx_model_path,
+                device=device,
+            )
+        else:
+            self._initialize_torch(
+                config_path=config_path,
+                checkpoint_path=checkpoint_path,
+                device=device,
+            )
+
+    def _initialize_onnx(
+        self,
+        onnx_model_path: Path,
+        device: str,
+    ) -> None:
+        if device not in {
+            "auto",
+            "cpu",
+        }:
+            raise ValueError(
+                "ONNX CPU backend only supports auto or cpu device."
+            )
+
+        onnx_model_sha256 = calculate_sha256(
+            onnx_model_path
+        )
+
+        if onnx_model_sha256 != FROZEN_ONNX_SHA256:
+            raise FrozenProtocolError(
+                "Frozen ONNX model SHA-256 mismatch."
+            )
+
+        import onnxruntime as ort
+
+        session_options = ort.SessionOptions()
+
+        session_options.graph_optimization_level = (
+            ort.GraphOptimizationLevel.ORT_ENABLE_ALL
+        )
+
+        session = ort.InferenceSession(
+            str(
+                onnx_model_path
+            ),
+            sess_options=session_options,
+            providers=[
+                "CPUExecutionProvider",
+            ],
+        )
+
+        input_names = tuple(
+            item.name
+            for item in session.get_inputs()
+        )
+
+        output_names = tuple(
+            item.name
+            for item in session.get_outputs()
+        )
+
+        if input_names != (
+            "before",
+            "after",
+        ):
+            raise FrozenProtocolError(
+                "Frozen ONNX input contract mismatch."
+            )
+
+        if output_names != (
+            "logits",
+        ):
+            raise FrozenProtocolError(
+                "Frozen ONNX output contract mismatch."
+            )
+
+        active_providers = tuple(
+            session.get_providers()
+        )
+
+        if "CPUExecutionProvider" not in active_providers:
+            raise RuntimeError(
+                "ONNX CPU execution provider is unavailable."
+            )
+
+        self._session = session
+        self._device = "cpu"
+        self._onnx_model_sha256 = onnx_model_sha256
+
+    def _initialize_torch(
+        self,
+        config_path: Path,
+        checkpoint_path: Path,
+        device: str,
+    ) -> None:
+        import torch
+
+        from src.training.train import (
+            build_model,
+            load_training_config,
+        )
 
         checkpoint_sha256 = calculate_sha256(
             checkpoint_path
@@ -872,14 +1294,18 @@ class FrozenChangePredictor:
 
         self._model = model
         self._device = selected_device
-        self._batch_size = batch_size
-        self._checkpoint_path = checkpoint_path
         self._checkpoint_sha256 = checkpoint_sha256
+
+    @property
+    def backend(
+        self,
+    ) -> str:
+        return self._backend
 
     @property
     def device(
         self,
-    ) -> torch.device:
+    ) -> Any:
         return self._device
 
     @property
@@ -894,6 +1320,12 @@ class FrozenChangePredictor:
     ) -> str:
         return self._checkpoint_sha256
 
+    @property
+    def onnx_model_sha256(
+        self,
+    ) -> str | None:
+        return self._onnx_model_sha256
+
     def predict_pair(
         self,
         before_directory: Path,
@@ -905,16 +1337,39 @@ class FrozenChangePredictor:
             after_directory,
         )
 
-        probability, mask, patch_count = run_tiled_inference(
-            model=self._model,
-            before=pair.before,
-            after=pair.after,
-            device=self._device,
-            batch_size=self._batch_size,
-            threshold=FROZEN_THRESHOLD,
-            patch_size=FROZEN_PATCH_SIZE,
-            stride=FROZEN_STRIDE,
-        )
+        if self._backend == InferenceBackend.ONNX_CPU:
+            if self._session is None:
+                raise RuntimeError(
+                    "ONNX inference session is unavailable."
+                )
+
+            probability, mask, patch_count = (
+                run_tiled_onnx_inference(
+                    session=self._session,
+                    before=pair.before,
+                    after=pair.after,
+                    batch_size=self._batch_size,
+                    threshold=FROZEN_THRESHOLD,
+                    patch_size=FROZEN_PATCH_SIZE,
+                    stride=FROZEN_STRIDE,
+                )
+            )
+        else:
+            if self._model is None:
+                raise RuntimeError(
+                    "PyTorch model is unavailable."
+                )
+
+            probability, mask, patch_count = run_tiled_inference(
+                model=self._model,
+                before=pair.before,
+                after=pair.after,
+                device=self._device,
+                batch_size=self._batch_size,
+                threshold=FROZEN_THRESHOLD,
+                patch_size=FROZEN_PATCH_SIZE,
+                stride=FROZEN_STRIDE,
+            )
 
         return PredictionResult(
             probability=probability,

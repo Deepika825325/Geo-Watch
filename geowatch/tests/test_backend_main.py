@@ -35,6 +35,8 @@ from src.inference.predictor import (
 
 
 class FakePredictor:
+    backend = "onnx_cpu"
+
     def predict_pair(
         self,
         before_directory: Path,
@@ -248,6 +250,10 @@ def test_health_reports_loaded_resources(
     assert payload[
         "model_loaded"
     ] is True
+
+    assert payload[
+        "model_backend"
+    ] == "onnx_cpu"
 
     assert payload[
         "database_connected"

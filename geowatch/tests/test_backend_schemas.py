@@ -266,6 +266,7 @@ def test_health_response_contains_frozen_protocol(
 ) -> None:
     response = HealthResponse(
         model_loaded=True,
+        model_backend="onnx_cpu",
         database_connected=False,
     )
 
@@ -276,6 +277,10 @@ def test_health_response_contains_frozen_protocol(
     assert serialized[
         "status"
     ] == "ok"
+
+    assert serialized[
+        "model_backend"
+    ] == "onnx_cpu"
 
     assert serialized[
         "protocol"

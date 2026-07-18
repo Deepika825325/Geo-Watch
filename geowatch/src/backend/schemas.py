@@ -548,6 +548,12 @@ class HealthResponse(GeoWatchSchema):
     ] = "geowatch-inference"
 
     model_loaded: bool
+
+    model_backend: Literal[
+        "cuda",
+        "onnx_cpu",
+    ] | None = None
+
     database_connected: bool
 
     protocol: FrozenProtocolResponse = Field(

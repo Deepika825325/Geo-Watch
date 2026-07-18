@@ -12,11 +12,16 @@ from torch import Tensor, nn
 
 from src.inference.predictor import (
     FROZEN_BANDS,
+    FROZEN_ONNX_SHA256,
     FROZEN_THRESHOLD,
+    FrozenChangePredictor,
+    InferenceBackend,
     RasterPairError,
     calculate_starts,
     read_aligned_pair,
+    resolve_backend,
     run_tiled_inference,
+    run_tiled_onnx_inference,
 )
 
 
@@ -335,3 +340,195 @@ def test_tiled_inference_rejects_threshold_change(
             batch_size=1,
             threshold=0.50,
         )
+
+def test_resolve_backend_honors_configured_value(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv(
+        "MODEL_BACKEND",
+        InferenceBackend.ONNX_CPU,
+    )
+
+    assert resolve_backend() == InferenceBackend.ONNX_CPU
+
+    monkeypatch.setenv(
+        "MODEL_BACKEND",
+        InferenceBackend.CUDA,
+    )
+
+    assert resolve_backend() == InferenceBackend.CUDA
+
+
+def test_resolve_backend_explicit_value_overrides_environment(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv(
+        "MODEL_BACKEND",
+        InferenceBackend.CUDA,
+    )
+
+    assert resolve_backend(
+        InferenceBackend.ONNX_CPU
+    ) == InferenceBackend.ONNX_CPU
+
+
+def test_resolve_backend_rejects_unknown_value(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv(
+        "MODEL_BACKEND",
+        "invalid",
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="Unsupported model backend",
+    ):
+        resolve_backend()
+
+
+class DifferenceOnnxSession:
+    def run(
+        self,
+        output_names: list[str],
+        inputs: dict[str, np.ndarray],
+    ) -> list[np.ndarray]:
+        if output_names != [
+            "logits",
+        ]:
+            raise RuntimeError(
+                "Unexpected output names."
+            )
+
+        before = inputs[
+            "before"
+        ]
+
+        after = inputs[
+            "after"
+        ]
+
+        logits = (
+            after[
+                :,
+                0:1,
+            ]
+            - before[
+                :,
+                0:1,
+            ]
+        ) * np.float32(
+            10.0
+        )
+
+        return [
+            logits.astype(
+                np.float32,
+                copy=False,
+            )
+        ]
+
+
+def test_onnx_tiled_inference_matches_torch_wrapper(
+) -> None:
+    before = np.zeros(
+        (
+            4,
+            300,
+            500,
+        ),
+        dtype=np.float32,
+    )
+
+    after = np.ones(
+        (
+            4,
+            300,
+            500,
+        ),
+        dtype=np.float32,
+    )
+
+    (
+        torch_probability,
+        torch_mask,
+        torch_patch_count,
+    ) = run_tiled_inference(
+        model=DifferenceModel(),
+        before=before,
+        after=after,
+        device=torch.device(
+            "cpu"
+        ),
+        batch_size=3,
+    )
+
+    (
+        onnx_probability,
+        onnx_mask,
+        onnx_patch_count,
+    ) = run_tiled_onnx_inference(
+        session=DifferenceOnnxSession(),
+        before=before,
+        after=after,
+        batch_size=3,
+    )
+
+    np.testing.assert_allclose(
+        onnx_probability,
+        torch_probability,
+        rtol=1e-6,
+        atol=1e-7,
+    )
+
+    np.testing.assert_array_equal(
+        onnx_mask,
+        torch_mask,
+    )
+
+    assert onnx_patch_count == torch_patch_count
+
+
+def test_frozen_predictor_runs_real_onnx_backend(
+    tmp_path: Path,
+) -> None:
+    before, after = build_pair(
+        tmp_path,
+        before_value=1_000,
+        after_value=9_000,
+        height=256,
+        width=256,
+    )
+
+    predictor = FrozenChangePredictor(
+        onnx_model_path=Path(
+            "deploy/model.onnx"
+        ),
+        backend=InferenceBackend.ONNX_CPU,
+        device="cpu",
+        batch_size=1,
+    )
+
+    result = predictor.predict_pair(
+        before_directory=before,
+        after_directory=after,
+        qualitative=True,
+    )
+
+    assert predictor.backend == InferenceBackend.ONNX_CPU
+    assert predictor.device == "cpu"
+    assert predictor.onnx_model_sha256 == FROZEN_ONNX_SHA256
+    assert result.probability.shape == (
+        256,
+        256,
+    )
+    assert result.mask.shape == (
+        256,
+        256,
+    )
+    assert result.patch_count == 1
+    assert result.threshold == FROZEN_THRESHOLD
+    assert result.qualitative is True
+    assert np.isfinite(
+        result.probability
+    ).all()
