@@ -1,0 +1,95 @@
+{
+  "checkpoint_modified": false,
+  "failure_analysis": {
+    "gallery_images": 12,
+    "gallery_review": {
+      "reviewed": 0,
+      "rows": 12,
+      "unreviewed": 12
+    },
+    "strongest_region": "montpellier",
+    "weakest_region": "valencia"
+  },
+  "frozen_protocol": {
+    "checkpoint_epoch": 24,
+    "checkpoint_sha256": "61e53ba86bc108d6ccbbb636c8da88c967e07da41471504878c74df6a903ea94",
+    "failure_analysis_sha256": "077bd0c56d200f3e7cc14019ab49b832aed020dfa72342908f4f7a6539e024d9",
+    "test_result_sha256": "e45e6265608707e3d1e439737bca59e9fde10010dd8c73cca420d7881bb9a8f9",
+    "threshold": 0.76
+  },
+  "hyderabad": {
+    "audit_path": null,
+    "input_root": "/home/tihan40904/Documents/Deepika/Geo-Watch/geowatch/data/qualitative/hyderabad",
+    "missing_files": [
+      "before/B02.tif",
+      "before/B03.tif",
+      "before/B04.tif",
+      "before/B08.tif",
+      "after/B02.tif",
+      "after/B03.tif",
+      "after/B04.tif",
+      "after/B08.tif"
+    ],
+    "present_files": [],
+    "qualitative_path": null,
+    "status": "pending_input"
+  },
+  "official_test": {
+    "evaluated_pixels": 3077936,
+    "macro": {
+      "mean": {
+        "accuracy": 0.9353316840114567,
+        "change_prevalence": 0.04357281676472728,
+        "f1": 0.3876904583258608,
+        "iou": 0.2662825094071549,
+        "precision": 0.3383945658597865,
+        "predicted_change_fraction": 0.07551254863005451,
+        "recall": 0.5803095362916151
+      },
+      "median": {
+        "accuracy": 0.9332118305413994,
+        "change_prevalence": 0.04134144494549541,
+        "f1": 0.4860956386837447,
+        "iou": 0.32153031195137594,
+        "precision": 0.43123274062319317,
+        "predicted_change_fraction": 0.0858477642442334,
+        "recall": 0.6057457312418576
+      }
+    },
+    "micro": {
+      "accuracy": 0.9336565152751715,
+      "change_prevalence": 0.05168301095279434,
+      "evaluated_pixels": 3077936,
+      "f1": 0.4852131867466994,
+      "false_negative": 62842,
+      "false_positive": 141359,
+      "ignored_pixels": 1444048,
+      "iou": 0.3203178047903713,
+      "precision": 0.40503968955445,
+      "predicted_change_fraction": 0.07719263818350999,
+      "recall": 0.6049586049523187,
+      "true_negative": 2777500,
+      "true_positive": 96235
+    },
+    "patches": 69,
+    "regions": 10
+  },
+  "report": "/home/tihan40904/Documents/Deepika/Geo-Watch/geowatch/reports/week6/week6_evaluation_report.md",
+  "status": "complete_with_optional_hyderabad_pending",
+  "test_data_used_for_tuning": false,
+  "tests": {
+    "command": [
+      "/home/tihan40904/Documents/Deepika/Geo-Watch/geowatch/.venv/bin/python",
+      "-m",
+      "pytest",
+      "tests",
+      "-q",
+      "-W",
+      "error"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "........................................................................ [ 78%]\n....................                                                     [100%]\n92 passed in 3.58s\n"
+  },
+  "threshold_modified": false
+}
