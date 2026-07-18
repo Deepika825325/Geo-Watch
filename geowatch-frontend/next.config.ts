@@ -5,6 +5,8 @@ const backendOrigin =
   ?? "http://127.0.0.1:8007"
 
 const nextConfig: NextConfig = {
+  output: "standalone",
+
   async rewrites() {
     return [
       {

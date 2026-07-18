@@ -1,0 +1,8 @@
+*
+!geowatch-frontend/
+!geowatch-frontend/**
+geowatch-frontend/node_modules
+geowatch-frontend/.next
+geowatch-frontend/.git
+geowatch-frontend/AGENTS.md
+geowatch-frontend/CLAUDE.md

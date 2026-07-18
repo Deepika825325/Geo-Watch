@@ -1,0 +1,45 @@
+FROM node:22-alpine AS dependencies
+
+WORKDIR /app
+
+COPY geowatch-frontend/package.json geowatch-frontend/package-lock.json ./
+
+RUN npm ci
+
+
+FROM node:22-alpine AS builder
+
+WORKDIR /app
+
+ENV NEXT_TELEMETRY_DISABLED=1
+
+ARG GEOWATCH_API_ORIGIN=http://geowatch-backend:8007
+ENV GEOWATCH_API_ORIGIN=${GEOWATCH_API_ORIGIN}
+
+COPY --from=dependencies /app/node_modules ./node_modules
+COPY geowatch-frontend/ ./
+
+RUN npm run build
+
+
+FROM node:22-alpine AS runtime
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV HOSTNAME=0.0.0.0
+ENV PORT=3000
+
+RUN addgroup --system --gid 10001 geowatch && adduser --system --uid 10001 --ingroup geowatch geowatch
+
+COPY --from=builder --chown=geowatch:geowatch /app/.next/standalone ./
+COPY --from=builder --chown=geowatch:geowatch /app/.next/static ./.next/static
+
+USER geowatch
+
+EXPOSE 3000
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 CMD node -e "fetch('http://127.0.0.1:3000/').then(response => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"
+
+CMD ["node", "server.js"]
