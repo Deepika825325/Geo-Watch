@@ -17,14 +17,25 @@ from fastapi import (
     Request,
     status,
 )
+from fastapi.responses import (
+    FileResponse,
+    Response,
+)
 from sqlalchemy.exc import SQLAlchemyError
 
 from src.backend.database import (
     DuplicateInferenceRequestError,
     GeoWatchDatabase,
 )
+from src.backend.previews import (
+    PreviewRole,
+    RasterPreviewError,
+    render_raster_preview,
+    resolve_preview_source,
+)
 from src.backend.schemas import (
     ArtifactResponse,
+    ArtifactRole,
     ErrorResponse,
     FrozenProtocolResponse,
     GeoJSONFeatureCollection,
@@ -53,6 +64,92 @@ from src.inference.vectorize import (
 DEFAULT_ARTIFACT_ROOT = Path(
     "artifacts/inference"
 )
+
+
+ARTIFACT_DOWNLOADS: dict[
+    ArtifactRole,
+    tuple[
+        str,
+        str,
+    ],
+] = {
+    ArtifactRole.probability_raster: (
+        "probability.tif",
+        "image/tiff; application=geotiff",
+    ),
+    ArtifactRole.binary_mask: (
+        "mask.tif",
+        "image/tiff; application=geotiff",
+    ),
+    ArtifactRole.change_geojson: (
+        "changes.geojson",
+        "application/geo+json",
+    ),
+}
+
+
+def resolve_artifact_file(
+    artifact_root: Path,
+    request_id: UUID,
+    role: ArtifactRole,
+) -> tuple[
+    Path,
+    str,
+]:
+    artifact_definition = (
+        ARTIFACT_DOWNLOADS.get(
+            role
+        )
+    )
+
+    if artifact_definition is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Artifact role is not available for download.",
+        )
+
+    filename, media_type = (
+        artifact_definition
+    )
+
+    resolved_root = (
+        artifact_root
+        .expanduser()
+        .resolve()
+    )
+
+    artifact_path = (
+        resolved_root
+        / str(
+            request_id
+        )
+        / filename
+    ).resolve()
+
+    if not artifact_path.is_relative_to(
+        resolved_root
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Artifact was not found.",
+        )
+
+    if (
+        not artifact_path.is_file()
+        or artifact_path.stat().st_size <= 0
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=(
+                "Artifact was not found for request "
+                f"{request_id}."
+            ),
+        )
+
+    return (
+        artifact_path,
+        media_type,
+    )
 
 
 def get_predictor(
@@ -608,6 +705,122 @@ def create_app(
                 remove_directory(
                     staging_directory
                 )
+
+    @app.get(
+        "/v1/requests/{request_id}/artifacts/{role}",
+        response_class=FileResponse,
+        response_model=None,
+        responses={
+            404: {
+                "model": ErrorResponse,
+            },
+            503: {
+                "model": ErrorResponse,
+            },
+        },
+    )
+    def get_artifact(
+        request_id: UUID,
+        role: ArtifactRole,
+        selected_artifact_root: Annotated[
+            Path,
+            Depends(
+                get_artifact_root
+            ),
+        ],
+    ) -> FileResponse:
+        artifact_path, media_type = (
+            resolve_artifact_file(
+                artifact_root=selected_artifact_root,
+                request_id=request_id,
+                role=role,
+            )
+        )
+
+        return FileResponse(
+            path=artifact_path,
+            media_type=media_type,
+            filename=artifact_path.name,
+        )
+
+    @app.get(
+        "/v1/requests/{request_id}/previews/{role}",
+        response_class=Response,
+        response_model=None,
+        responses={
+            404: {
+                "model": ErrorResponse,
+            },
+            422: {
+                "model": ErrorResponse,
+            },
+            503: {
+                "model": ErrorResponse,
+            },
+        },
+    )
+    def get_raster_preview(
+        request_id: UUID,
+        role: PreviewRole,
+        selected_artifact_root: Annotated[
+            Path,
+            Depends(
+                get_artifact_root
+            ),
+        ],
+    ) -> Response:
+        try:
+            source_path = resolve_preview_source(
+                artifact_root=selected_artifact_root,
+                request_id=request_id,
+                role=role,
+            )
+
+            preview = render_raster_preview(
+                source_path=source_path,
+                role=role,
+            )
+        except FileNotFoundError as error:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=(
+                    "Preview source was not found for request "
+                    f"{request_id}."
+                ),
+            ) from error
+        except RasterPreviewError as error:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+                detail=str(
+                    error
+                ),
+            ) from error
+
+        bounds = ",".join(
+            f"{value:.12f}"
+            for value in preview.bounds
+        )
+
+        return Response(
+            content=preview.content,
+            media_type="image/png",
+            headers={
+                "Cache-Control": "no-store",
+                "Content-Disposition": (
+                    f'inline; filename="{role}.png"'
+                ),
+                "X-GeoWatch-Bounds": bounds,
+                "X-GeoWatch-Width": str(
+                    preview.width
+                ),
+                "X-GeoWatch-Height": str(
+                    preview.height
+                ),
+                "X-GeoWatch-Source-CRS": (
+                    preview.source_crs
+                ),
+            },
+        )
 
     @app.get(
         "/v1/requests/{request_id}/changes",

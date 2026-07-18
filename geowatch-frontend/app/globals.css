@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-bg: #f4f3ee;
+  --color-surface: #ffffff;
+  --color-border: #dfdcd1;
+  --color-border-strong: #c8c4b5;
+  --color-ink: #1e2620;
+  --color-ink-soft: #63695d;
+  --color-ink-faint: #9b9c8f;
+  --color-forest: #33574a;
+  --color-forest-soft: #e7eee9;
+  --color-ochre: #b5763b;
+  --color-ochre-soft: #f5e9d9;
+  --color-slate: #3e6e84;
+  --color-slate-soft: #e4eef1;
+  --font-display: var(--font-space-grotesk);
+  --font-body: var(--font-inter);
+  --font-mono: var(--font-ibm-plex-mono);
+  --radius-panel: 6px;
+}
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--color-bg);
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-inter), sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+::selection {
+  background: var(--color-ochre-soft);
+  color: var(--color-ink);
+}
+
+.leaflet-container {
+  background: var(--color-forest-soft);
+  font-family: var(--font-inter), sans-serif;
+}
+
+.leaflet-control-zoom {
+  overflow: hidden;
+  border: 1px solid var(--color-border-strong) !important;
+  border-radius: var(--radius-panel) !important;
+  box-shadow: 0 8px 24px rgb(30 38 32 / 10%) !important;
+}
+
+.leaflet-control-zoom a {
+  border-color: var(--color-border) !important;
+  background: var(--color-surface) !important;
+  color: var(--color-ink) !important;
+}
+
+.leaflet-control-attribution {
+  border-radius: 4px 0 0 0;
+  background: rgb(255 255 255 / 82%) !important;
+  color: var(--color-ink-soft) !important;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 9px !important;
+}
+
+.leaflet-popup-content-wrapper {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  box-shadow: 0 16px 40px rgb(30 38 32 / 16%);
+}
+
+.leaflet-popup-tip {
+  background: var(--color-surface);
+}
+
+.leaflet-popup-content {
+  margin: 14px;
+}
+
+.satellite-imagery {
+  filter: none;
+}
+
+.satellite-imagery--enhanced {
+  filter:
+    saturate(1.75)
+    contrast(1.24)
+    brightness(1.08);
+}
+
+.compare-range {
+  height: 4px;
+  width: 100%;
+  appearance: none;
+  border-radius: 999px;
+  background: var(--color-border-strong);
+  cursor: ew-resize;
+}
+
+.compare-range::-webkit-slider-thumb {
+  width: 18px;
+  height: 18px;
+  appearance: none;
+  border: 3px solid var(--color-surface);
+  border-radius: 999px;
+  background: var(--color-forest);
+  box-shadow: 0 2px 8px rgb(30 38 32 / 24%);
+}
+
+.compare-range::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 3px solid var(--color-surface);
+  border-radius: 999px;
+  background: var(--color-forest);
+  box-shadow: 0 2px 8px rgb(30 38 32 / 24%);
+}

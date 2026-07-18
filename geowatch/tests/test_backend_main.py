@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import hashlib
+from io import BytesIO
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 from uuid import UUID, uuid4
 
 import numpy as np
+from PIL import Image
 from affine import Affine
 from fastapi.testclient import TestClient
 from rasterio.crs import CRS
@@ -478,6 +480,388 @@ def test_persistence_requires_database(
     ]
 
 
+def test_artifact_endpoint_serves_known_files(
+    tmp_path: Path,
+) -> None:
+    artifact_root = (
+        tmp_path
+        / "artifacts"
+    )
+
+    request_id = uuid4()
+
+    request_directory = (
+        artifact_root
+        / str(
+            request_id
+        )
+    )
+
+    request_directory.mkdir(
+        parents=True
+    )
+
+    expected_artifacts = {
+        "probability_raster": (
+            "probability.tif",
+            b"probability-raster",
+            "image/tiff",
+        ),
+        "binary_mask": (
+            "mask.tif",
+            b"binary-mask",
+            "image/tiff",
+        ),
+        "change_geojson": (
+            "changes.geojson",
+            b'{"type":"FeatureCollection","features":[]}',
+            "application/geo+json",
+        ),
+    }
+
+    for (
+        filename,
+        content,
+        _,
+    ) in expected_artifacts.values():
+        (
+            request_directory
+            / filename
+        ).write_bytes(
+            content
+        )
+
+    with create_test_client(
+        artifact_root,
+        None,
+    ) as client:
+        for (
+            role,
+            (
+                filename,
+                expected_content,
+                expected_media_type,
+            ),
+        ) in expected_artifacts.items():
+            response = client.get(
+                (
+                    f"/v1/requests/{request_id}"
+                    f"/artifacts/{role}"
+                )
+            )
+
+            assert response.status_code == 200
+            assert response.content == expected_content
+
+            assert response.headers[
+                "content-type"
+            ].startswith(
+                expected_media_type
+            )
+
+            assert filename in response.headers[
+                "content-disposition"
+            ]
+
+
+def test_artifact_endpoint_returns_not_found(
+    tmp_path: Path,
+) -> None:
+    request_id = uuid4()
+
+    with create_test_client(
+        tmp_path
+        / "artifacts",
+        None,
+    ) as client:
+        response = client.get(
+            (
+                f"/v1/requests/{request_id}"
+                "/artifacts/probability_raster"
+            )
+        )
+
+    assert response.status_code == 404
+
+    assert (
+        "Artifact was not found"
+        in response.json()[
+            "detail"
+        ]
+    )
+
+
+def test_artifact_endpoint_rejects_unknown_role(
+    tmp_path: Path,
+) -> None:
+    request_id = uuid4()
+
+    with create_test_client(
+        tmp_path
+        / "artifacts",
+        None,
+    ) as client:
+        response = client.get(
+            (
+                f"/v1/requests/{request_id}"
+                "/artifacts/arbitrary_file"
+            )
+        )
+
+    assert response.status_code == 422
+
+
+def test_artifact_endpoint_rejects_symlink_escape(
+    tmp_path: Path,
+) -> None:
+    artifact_root = (
+        tmp_path
+        / "artifacts"
+    )
+
+    artifact_root.mkdir()
+
+    outside_directory = (
+        tmp_path
+        / "outside"
+    )
+
+    outside_directory.mkdir()
+
+    (
+        outside_directory
+        / "probability.tif"
+    ).write_bytes(
+        b"outside-artifact"
+    )
+
+    request_id = uuid4()
+
+    (
+        artifact_root
+        / str(
+            request_id
+        )
+    ).symlink_to(
+        outside_directory,
+        target_is_directory=True,
+    )
+
+    with create_test_client(
+        artifact_root,
+        None,
+    ) as client:
+        response = client.get(
+            (
+                f"/v1/requests/{request_id}"
+                "/artifacts/probability_raster"
+            )
+        )
+
+    assert response.status_code == 404
+
+
+def test_preview_endpoint_serves_generated_pngs(
+    tmp_path: Path,
+) -> None:
+    database = FakeDatabase()
+
+    artifact_root = (
+        tmp_path
+        / "artifacts"
+    )
+
+    before, after = create_input_directories(
+        tmp_path
+        / "input"
+    )
+
+    request_id = uuid4()
+
+    with create_test_client(
+        artifact_root,
+        database,
+    ) as client:
+        inference_response = client.post(
+            "/v1/inference",
+            json={
+                "request_id": str(
+                    request_id
+                ),
+                "before_directory": str(
+                    before
+                ),
+                "after_directory": str(
+                    after
+                ),
+                "qualitative": True,
+                "persist": True,
+            },
+        )
+
+        probability_response = client.get(
+            (
+                f"/v1/requests/{request_id}"
+                "/previews/probability"
+            )
+        )
+
+        mask_response = client.get(
+            (
+                f"/v1/requests/{request_id}"
+                "/previews/mask"
+            )
+        )
+
+    assert inference_response.status_code == 201
+
+    for response in (
+        probability_response,
+        mask_response,
+    ):
+        assert response.status_code == 200
+
+        assert response.headers[
+            "content-type"
+        ].startswith(
+            "image/png"
+        )
+
+        assert response.headers[
+            "cache-control"
+        ] == "no-store"
+
+        assert response.headers[
+            "x-geowatch-width"
+        ] == "32"
+
+        assert response.headers[
+            "x-geowatch-height"
+        ] == "32"
+
+        assert response.headers[
+            "x-geowatch-source-crs"
+        ] == "EPSG:32644"
+
+        bounds = [
+            float(
+                value
+            )
+            for value in response.headers[
+                "x-geowatch-bounds"
+            ].split(
+                ","
+            )
+        ]
+
+        assert len(
+            bounds
+        ) == 4
+
+        south, west, north, east = (
+            bounds
+        )
+
+        assert south < north
+        assert west < east
+
+        image = Image.open(
+            BytesIO(
+                response.content
+            )
+        )
+
+        assert image.format == "PNG"
+        assert image.mode == "RGBA"
+        assert image.size == (
+            32,
+            32,
+        )
+
+    probability_rgba = np.asarray(
+        Image.open(
+            BytesIO(
+                probability_response.content
+            )
+        )
+    )
+
+    mask_rgba = np.asarray(
+        Image.open(
+            BytesIO(
+                mask_response.content
+            )
+        )
+    )
+
+    assert int(
+        np.count_nonzero(
+            probability_rgba[
+                :,
+                :,
+                3,
+            ]
+        )
+    ) == 64
+
+    assert int(
+        np.count_nonzero(
+            mask_rgba[
+                :,
+                :,
+                3,
+            ]
+        )
+    ) == 64
+
+
+def test_preview_endpoint_returns_not_found(
+    tmp_path: Path,
+) -> None:
+    request_id = uuid4()
+
+    with create_test_client(
+        tmp_path
+        / "artifacts",
+        None,
+    ) as client:
+        response = client.get(
+            (
+                f"/v1/requests/{request_id}"
+                "/previews/probability"
+            )
+        )
+
+    assert response.status_code == 404
+
+    assert (
+        "Preview source was not found"
+        in response.json()[
+            "detail"
+        ]
+    )
+
+
+def test_preview_endpoint_rejects_unknown_role(
+    tmp_path: Path,
+) -> None:
+    request_id = uuid4()
+
+    with create_test_client(
+        tmp_path
+        / "artifacts",
+        None,
+    ) as client:
+        response = client.get(
+            (
+                f"/v1/requests/{request_id}"
+                "/previews/arbitrary"
+            )
+        )
+
+    assert response.status_code == 422
+
+
 def test_openapi_contains_service_endpoints(
     tmp_path: Path,
 ) -> None:
@@ -497,5 +881,15 @@ def test_openapi_contains_service_endpoints(
 
     assert (
         "/v1/requests/{request_id}/changes"
+        in paths
+    )
+
+    assert (
+        "/v1/requests/{request_id}/artifacts/{role}"
+        in paths
+    )
+
+    assert (
+        "/v1/requests/{request_id}/previews/{role}"
         in paths
     )
