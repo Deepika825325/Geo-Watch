@@ -336,15 +336,34 @@ class DatabaseConfig:
         )
 
 
+def normalize_database_url(
+    url: str,
+) -> str:
+    if url.startswith(
+        "postgresql+psycopg://"
+    ):
+        return url
+
+    if url.startswith(
+        "postgresql://"
+    ):
+        return url.replace(
+            "postgresql://",
+            "postgresql+psycopg://",
+            1,
+        )
+
+    raise DatabaseConfigurationError(
+        "Database URL must use postgresql."
+    )
+
+
 def validate_database_config(
     config: DatabaseConfig,
 ) -> None:
-    if not config.url.startswith(
-        "postgresql+psycopg://"
-    ):
-        raise DatabaseConfigurationError(
-            "Database URL must use postgresql+psycopg."
-        )
+    normalize_database_url(
+        config.url
+    )
 
     if config.pool_size <= 0:
         raise DatabaseConfigurationError(
@@ -364,8 +383,12 @@ def create_database_engine(
         config
     )
 
+    database_url = normalize_database_url(
+        config.url
+    )
+
     return create_engine(
-        config.url,
+        database_url,
         pool_pre_ping=config.pool_pre_ping,
         pool_size=config.pool_size,
         max_overflow=config.max_overflow,
