@@ -1,6 +1,8 @@
 *
 !src/
 !src/**
+!migrations/
+!migrations/**
 !deploy/
 !deploy/Dockerfile.backend
 !deploy/requirements.backend.txt

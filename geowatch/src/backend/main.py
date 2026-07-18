@@ -23,6 +23,9 @@ from fastapi.responses import (
 )
 from sqlalchemy.exc import SQLAlchemyError
 
+from src.backend.bootstrap import (
+    initialize_database,
+)
 from src.backend.database import (
     DuplicateInferenceRequestError,
     GeoWatchDatabase,
@@ -323,7 +326,17 @@ def create_lifespan(
                 batch_size=batch_size,
             )
 
-            app.state.database = GeoWatchDatabase()
+            database = GeoWatchDatabase()
+
+            try:
+                initialize_database(
+                    database.engine
+                )
+            except Exception:
+                database.dispose()
+                raise
+
+            app.state.database = database
 
         try:
             yield

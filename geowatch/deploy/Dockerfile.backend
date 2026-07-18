@@ -25,6 +25,7 @@ RUN groupadd --gid 10001 geowatch && useradd --uid 10001 --gid geowatch --create
 
 COPY --from=builder /install /usr/local
 COPY src /app/src
+COPY migrations /app/migrations
 COPY deploy/model.onnx /app/deploy/model.onnx
 
 RUN mkdir -p /app/artifacts && chown -R geowatch:geowatch /app
