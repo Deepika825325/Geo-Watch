@@ -1,0 +1,116 @@
+{
+  "access": {
+    "f1_reported": false,
+    "image_pixels_accessed": false,
+    "iou_reported": false,
+    "model_inference_executed": false,
+    "official_test_artifacts_modified": false,
+    "precision_reported": false,
+    "recall_reported": false
+  },
+  "collection": "sentinel-2-l2a",
+  "grid": {
+    "bottom": 1921629.7587847603,
+    "center_latitude": 17.3856111,
+    "center_longitude": 78.3303319,
+    "height": 512,
+    "left": 213774.52715530345,
+    "pixel_size": 10.0,
+    "right": 218894.52715530345,
+    "target_epsg": 32644,
+    "top": 1926749.7587847603,
+    "wgs84_bbox": [
+      78.3059195642821,
+      17.36217291567956,
+      78.35473820397692,
+      17.40904723759459
+    ],
+    "width": 512
+  },
+  "ground_truth_available": false,
+  "label": "qualitative_only_no_ground_truth_metrics",
+  "metrics_allowed": false,
+  "required_assets": [
+    "B02",
+    "B03",
+    "B04",
+    "B08"
+  ],
+  "search": {
+    "after_candidate_count": 29,
+    "after_window": "2025-01-01/2025-03-31",
+    "before_candidate_count": 24,
+    "before_window": "2020-01-01/2020-03-31",
+    "maximum_cloud_cover": 20.0
+  },
+  "selected": {
+    "after": {
+      "asset_keys": [
+        "AOT",
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B09",
+        "B11",
+        "B12",
+        "B8A",
+        "SCL",
+        "WVP",
+        "datastrip-metadata",
+        "granule-metadata",
+        "inspire-metadata",
+        "product-metadata",
+        "rendered_preview",
+        "safe-manifest",
+        "tilejson",
+        "visual"
+      ],
+      "cloud_cover": 0.000894,
+      "datetime": "2025-03-28T05:06:59.024000+00:00",
+      "item_id": "S2B_MSIL2A_20250328T050659_R019_T43QHV_20250328T072008",
+      "mgrs_tile": "43QHV",
+      "platform": "Sentinel-2B",
+      "projection_epsg": null
+    },
+    "before": {
+      "asset_keys": [
+        "AOT",
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B09",
+        "B11",
+        "B12",
+        "B8A",
+        "SCL",
+        "WVP",
+        "datastrip-metadata",
+        "granule-metadata",
+        "inspire-metadata",
+        "preview",
+        "product-metadata",
+        "rendered_preview",
+        "safe-manifest",
+        "tilejson",
+        "visual"
+      ],
+      "cloud_cover": 0.056666,
+      "datetime": "2020-03-29T05:06:51.024000+00:00",
+      "item_id": "S2A_MSIL2A_20200329T050651_R019_T43QHV_20201020T215529",
+      "mgrs_tile": "43QHV",
+      "platform": "Sentinel-2A",
+      "projection_epsg": null
+    },
+    "day_of_year_difference": 2
+  }
+}

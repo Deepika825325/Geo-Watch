@@ -1,0 +1,24 @@
+services:
+  postgis:
+    image: postgis/postgis:16-3.5-alpine
+    container_name: geowatch-week7-postgis
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: geowatch
+      POSTGRES_USER: geowatch
+      POSTGRES_PASSWORD: ${GEOWATCH_POSTGRES_PASSWORD:?GEOWATCH_POSTGRES_PASSWORD is required}
+    ports:
+      - "127.0.0.1:55432:5432"
+    volumes:
+      - geowatch_week7_postgis_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U geowatch -d geowatch
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+volumes:
+  geowatch_week7_postgis_data:

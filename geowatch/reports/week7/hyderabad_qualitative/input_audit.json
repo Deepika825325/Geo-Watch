@@ -1,0 +1,73 @@
+{
+  "access": {
+    "image_pixels_accessed": false,
+    "metrics_calculated": false,
+    "model_inference_executed": false,
+    "official_test_results_modified": false
+  },
+  "input": {
+    "after_files": [
+      "data/qualitative/hyderabad/after/B02.tif",
+      "data/qualitative/hyderabad/after/B03.tif",
+      "data/qualitative/hyderabad/after/B04.tif",
+      "data/qualitative/hyderabad/after/B08.tif"
+    ],
+    "bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B08"
+    ],
+    "before_files": [
+      "data/qualitative/hyderabad/before/B02.tif",
+      "data/qualitative/hyderabad/before/B03.tif",
+      "data/qualitative/hyderabad/before/B04.tif",
+      "data/qualitative/hyderabad/before/B08.tif"
+    ],
+    "bottom_padding": 0,
+    "column_starts": [
+      0,
+      256
+    ],
+    "crs": "EPSG:32644",
+    "dtype": "uint16",
+    "height": 512,
+    "input_root": "data/qualitative/hyderabad",
+    "original_pixel_count": 262144,
+    "padded_pixel_count": 262144,
+    "patch_count": 4,
+    "patch_size": 256,
+    "right_padding": 0,
+    "row_starts": [
+      0,
+      256
+    ],
+    "stride": 256,
+    "transform": [
+      10.0,
+      0.0,
+      213774.52715530345,
+      0.0,
+      -10.0,
+      1926749.7587847603,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "width": 512
+  },
+  "protocol": {
+    "bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B08"
+    ],
+    "checkpoint_epoch": 24,
+    "checkpoint_sha256": "61e53ba86bc108d6ccbbb636c8da88c967e07da41471504878c74df6a903ea94",
+    "evaluation_role": "unlabelled_qualitative_only",
+    "patch_size": 256,
+    "stride": 256,
+    "threshold": 0.76
+  }
+}

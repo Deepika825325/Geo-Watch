@@ -1,0 +1,91 @@
+{
+  "api_acceptance": {
+    "changes_http_status": 200,
+    "database_connected": true,
+    "inference_http_status": 201,
+    "model_loaded": true,
+    "request_id": "7883722b-f72d-4860-851f-dc9433fca63a",
+    "stored_change_count": 106
+  },
+  "api_artifacts": [
+    {
+      "path": "artifacts/inference/7883722b-f72d-4860-851f-dc9433fca63a/probability.tif",
+      "qualitative": true,
+      "role": "probability_raster",
+      "sha256": "880301a932b7232b42def7298f7dda9d4410246da18fb68e006039fe647f3798",
+      "size_bytes": 742883
+    },
+    {
+      "path": "artifacts/inference/7883722b-f72d-4860-851f-dc9433fca63a/mask.tif",
+      "qualitative": true,
+      "role": "binary_mask",
+      "sha256": "23bbfed9f9a1ff6df64f9136e2aae02864772e095056859a7b5ec4bb2e3886fe",
+      "size_bytes": 6055
+    },
+    {
+      "path": "artifacts/inference/7883722b-f72d-4860-851f-dc9433fca63a/changes.geojson",
+      "qualitative": true,
+      "role": "change_geojson",
+      "sha256": "6ac6ed848cfff18d5418a9e2cb23c656686342fad110411b2a144e4e0eb1d2b0",
+      "size_bytes": 406004
+    }
+  ],
+  "baseline_commit": "15f64bd59ccd2487f4ba818409fce9c3ba903b52",
+  "branch": "week7-backend-postgis",
+  "frozen_protocol": {
+    "bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B08"
+    ],
+    "checkpoint_epoch": 24,
+    "checkpoint_sha256": "61e53ba86bc108d6ccbbb636c8da88c967e07da41471504878c74df6a903ea94",
+    "patch_size": 256,
+    "stride": 256,
+    "threshold": 0.76
+  },
+  "generated_at_utc": "2026-07-18T08:50:47.142111+00:00",
+  "hyderabad": {
+    "destination_crs": "EPSG:4326",
+    "evaluation_role": "unlabelled_qualitative_demonstration",
+    "feature_count": 106,
+    "ground_truth_available": false,
+    "patch_count": 4,
+    "performance_metrics_reported": false,
+    "raster_height": 512,
+    "raster_width": 512,
+    "source_crs": "EPSG:32644",
+    "total_area_m2": 1956100.0,
+    "total_pixel_count": 19561
+  },
+  "postgis": {
+    "all_geometries_polygonal": true,
+    "all_geometries_valid": true,
+    "all_qualitative": true,
+    "maximum_srid": 4326,
+    "minimum_srid": 4326,
+    "unique_change_ids": 106
+  },
+  "protected_artifacts": {
+    "checkpoint_sha256": "61e53ba86bc108d6ccbbb636c8da88c967e07da41471504878c74df6a903ea94",
+    "hyderabad_geojson_sha256": "04bb991fbb8a6c6f14d1ecdfcdb97f2ea39534d73cb5d6e88176ae2a64a759d8",
+    "week6_failure_analysis_sha256": "077bd0c56d200f3e7cc14019ab49b832aed020dfa72342908f4f7a6539e024d9",
+    "week6_test_results_sha256": "e45e6265608707e3d1e439737bca59e9fde10010dd8c73cca420d7881bb9a8f9"
+  },
+  "reproducibility": {
+    "compose_file": "docker-compose.week7.yml",
+    "direct_dependency_count": 16,
+    "environment_template": ".env.week7.example",
+    "locked_distribution_count": 170,
+    "migration": "migrations/001_create_changes_table.sql",
+    "runbook": "docs/week7_backend_postgis_runbook.md"
+  },
+  "status": "acceptance_passed",
+  "test_suite": {
+    "command": "python -m pytest tests -q -W error",
+    "failed": 0,
+    "passed": 140
+  },
+  "week": 7
+}
