@@ -1,7 +1,9 @@
+name: geowatch
+
 services:
   postgis:
     image: postgis/postgis:16-3.5-alpine
-    container_name: geowatch-week7-postgis
+    container_name: geowatch-postgis
     restart: unless-stopped
     environment:
       POSTGRES_DB: geowatch
@@ -10,7 +12,7 @@ services:
     ports:
       - "127.0.0.1:55432:5432"
     volumes:
-      - geowatch_week7_postgis_data:/var/lib/postgresql/data
+      - postgis_data:/var/lib/postgresql/data
     healthcheck:
       test:
         - CMD-SHELL
@@ -21,4 +23,5 @@ services:
       start_period: 10s
 
 volumes:
-  geowatch_week7_postgis_data:
+  postgis_data:
+    name: geowatch_postgis_data

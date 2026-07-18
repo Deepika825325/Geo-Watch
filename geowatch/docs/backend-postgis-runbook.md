@@ -32,13 +32,13 @@ Do not commit the real password.
 
 ## Start PostGIS
 
-    docker compose -f docker-compose.week7.yml up -d postgis
-    docker compose -f docker-compose.week7.yml ps
+    docker compose -f deploy/docker-compose.local.yml up -d postgis
+    docker compose -f deploy/docker-compose.local.yml ps
 
 ## Apply the database migration
 
     docker compose \
-      -f docker-compose.week7.yml \
+      -f deploy/docker-compose.local.yml \
       exec \
       -T \
       postgis \
@@ -128,7 +128,7 @@ Stop the foreground Uvicorn process with `Ctrl+C`.
 The Compose environment variable must be available even when stopping the service:
 
     export GEOWATCH_POSTGRES_PASSWORD='<local-password>'
-    docker compose -f docker-compose.week7.yml down
+    docker compose -f deploy/docker-compose.local.yml down
 
 Do not use `--volumes` unless permanent deletion of the database is intentional.
 
