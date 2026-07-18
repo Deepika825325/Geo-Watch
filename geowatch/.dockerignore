@@ -1,0 +1,7 @@
+*
+!src/
+!src/**
+!deploy/
+!deploy/Dockerfile.backend
+!deploy/requirements.backend.txt
+!deploy/model.onnx
