@@ -1,0 +1,48 @@
+databases:
+  - name: geowatch-db-825325
+    plan: free
+    region: singapore
+    postgresMajorVersion: "16"
+    databaseName: geowatch
+    user: geowatch
+    ipAllowList: []
+
+services:
+  - type: web
+    name: geowatch-api-825325
+    runtime: docker
+    plan: free
+    region: singapore
+    branch: feature/cpu-inference-deployment
+    dockerfilePath: ./geowatch/deploy/Dockerfile.backend
+    dockerContext: ./geowatch
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    envVars:
+      - key: MODEL_BACKEND
+        value: onnx_cpu
+      - key: GEOWATCH_DEVICE
+        value: cpu
+      - key: GEOWATCH_BATCH_SIZE
+        value: "4"
+      - key: GEOWATCH_DATABASE_URL
+        fromDatabase:
+          name: geowatch-db-825325
+          property: connectionString
+
+  - type: web
+    name: geowatch-app-825325
+    runtime: docker
+    plan: free
+    region: singapore
+    branch: feature/cpu-inference-deployment
+    dockerfilePath: ./geowatch/deploy/Dockerfile.frontend
+    dockerContext: .
+    healthCheckPath: /
+    autoDeployTrigger: commit
+    envVars:
+      - key: GEOWATCH_API_ORIGIN
+        fromService:
+          type: web
+          name: geowatch-api-825325
+          envVarKey: RENDER_EXTERNAL_HOSTNAME
