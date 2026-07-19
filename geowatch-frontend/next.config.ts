@@ -1,7 +1,18 @@
 import type { NextConfig } from "next"
 
-const explicitBackendOrigin =
+const rawBackendOrigin =
   process.env.GEOWATCH_API_ORIGIN?.trim()
+
+const explicitBackendOrigin =
+  rawBackendOrigin
+    ? (
+        /^[a-z][a-z\d+\-.]*:\/\//i.test(
+          rawBackendOrigin
+        )
+          ? rawBackendOrigin
+          : `https://${rawBackendOrigin}`
+      )
+    : undefined
 
 const backendHostPort =
   process.env.GEOWATCH_API_HOSTPORT?.trim()
