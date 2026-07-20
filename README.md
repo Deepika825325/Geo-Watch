@@ -2,42 +2,48 @@
 
 # GeoWatch
 
-### Satellite Change Detection and Spatial Intelligence Platform
+### Satellite Change Detection and Geospatial Visualization Platform
 
-GeoWatch detects and visualizes geographical changes between historical and recent satellite observations using deep learning and geospatial processing.
+GeoWatch detects geographical changes between historical and recent Sentinel-2 satellite observations and presents model-generated change regions through an interactive web dashboard.
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Open%20GeoWatch-black?style=for-the-badge)](https://geowatch-app-825325.onrender.com)
-[![API Health](https://img.shields.io/badge/API-Health%20Check-white?style=for-the-badge&logo=fastapi&logoColor=black)](https://geowatch-api-825325.onrender.com/health)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Open_GeoWatch-black?style=for-the-badge)](https://geowatch-app-825325.onrender.com)
+[![API Status](https://img.shields.io/badge/API-Health_Check-white?style=for-the-badge&logo=fastapi&logoColor=black)](https://geowatch-api-825325.onrender.com/health)
 
 </div>
 
 ---
 
+## Overview
+
+GeoWatch processes bi-temporal satellite imagery, predicts pixel-level changes, converts detected regions into geospatial polygons, stores them in PostGIS, and displays the results in a Next.js dashboard.
+
+### Key Features
+
+- Bi-temporal satellite image comparison
+- Deep learning-based change detection
+- Change-probability and binary-mask generation
+- Raster-to-polygon conversion
+- PostGIS spatial storage
+- Interactive before-and-after visualization
+- Natural and enhanced image rendering
+
+---
+
+## Live Demo
+
+**Application:** [https://geowatch-app-825325.onrender.com](https://geowatch-app-825325.onrender.com)
+
+**Backend Health:** [https://geowatch-api-825325.onrender.com/health](https://geowatch-api-825325.onrender.com/health)
+
 <p align="center">
   <a href="https://geowatch-app-825325.onrender.com">
     <img
-      src="docs/assets/Geo-watch_Dashboard.png"
-      alt="GeoWatch change detection dashboard"
+      src="geowatch/docs/assets/Geo-watch_Dashboard.png"
+      alt="GeoWatch satellite change detection dashboard"
       width="100%"
     />
   </a>
 </p>
-
-## Overview
-
-GeoWatch processes bi-temporal Sentinel-2 imagery and generates pixel-level change predictions. Detected regions are converted into geospatial polygons, stored in PostGIS, served through FastAPI, and displayed in an interactive Next.js dashboard.
-
-### Core Capabilities
-
-- Bi-temporal satellite image comparison
-- Multispectral Sentinel-2 processing
-- Deep learning-based change detection
-- Change-probability and binary-mask generation
-- Raster-to-polygon vectorization
-- PostGIS spatial storage
-- FastAPI inference and spatial APIs
-- Interactive before-and-after visualization
-- Natural and enhanced rendering modes
 
 ---
 
@@ -45,7 +51,7 @@ GeoWatch processes bi-temporal Sentinel-2 imagery and generates pixel-level chan
 
 <p align="center">
   <img
-    src="docs/assets/Artichitecture.png"
+    src="geowatch/docs/assets/Artichitecture.png"
     alt="GeoWatch system architecture"
     width="100%"
   />
@@ -54,26 +60,62 @@ GeoWatch processes bi-temporal Sentinel-2 imagery and generates pixel-level chan
 ```text
 Historical and Recent Satellite Images
                     ↓
-        Validation and Preprocessing
+          Validation and Preprocessing
                     ↓
-        Siamese ResNet-18 U-Net
+          Siamese ResNet-18 U-Net
                     ↓
-         Change Probability Raster
+          Change Probability Raster
                     ↓
-     Thresholding and Polygon Generation
+        Mask and Polygon Generation
                     ↓
-                 PostGIS
+                  PostGIS
                     ↓
-              FastAPI Backend
+             FastAPI Backend
                     ↓
-          Next.js Analyst Dashboard
+          Next.js Web Dashboard
 ```
 
 ---
 
-## Technology Stack
+## Dashboard
 
-| Category | Technologies |
+The dashboard provides a comparison slider, detected-change polygons, predicted area, probability summaries, and map-rendering controls.
+
+### Natural Rendering
+
+<p align="center">
+  <img
+    src="geowatch/docs/assets/Natural.png"
+    alt="GeoWatch natural satellite rendering"
+    width="100%"
+  />
+</p>
+
+### Enhanced Rendering
+
+<p align="center">
+  <img
+    src="geowatch/docs/assets/Enhanced.png"
+    alt="GeoWatch enhanced satellite rendering"
+    width="100%"
+  />
+</p>
+
+### Geographic View
+
+<p align="center">
+  <img
+    src="geowatch/docs/assets/World_view.png"
+    alt="GeoWatch geographic map view"
+    width="100%"
+  />
+</p>
+
+---
+
+## Tech Stack
+
+| Layer | Technologies |
 |---|---|
 | Machine Learning | Python, PyTorch, ResNet-18, U-Net, ONNX Runtime |
 | Geospatial Processing | Rasterio, GeoPandas, Shapely, OpenCV |
@@ -81,108 +123,53 @@ Historical and Recent Satellite Images
 | Database | PostgreSQL, PostGIS |
 | Frontend | Next.js, React, TypeScript, Leaflet |
 | Infrastructure | Docker, Docker Compose, Render |
-| Data | Sentinel-2 multispectral satellite imagery |
+| Satellite Data | Sentinel-2 multispectral imagery |
 
 ---
 
-## Dashboard Visualizations
+## Processing Pipeline
 
-### Natural Rendering
-
-<p align="center">
-  <img
-    src="docs/assets/Natural.png"
-    alt="GeoWatch natural satellite rendering"
-    width="100%"
-  />
-</p>
-
-Natural rendering preserves the original visual appearance of the satellite observations for geographical context.
-
-### Enhanced Rendering
-
-<p align="center">
-  <img
-    src="docs/assets/Enhanced.png"
-    alt="GeoWatch enhanced satellite rendering"
-    width="100%"
-  />
-</p>
-
-Enhanced rendering increases visual contrast to support closer inspection of model-generated change regions.
-
-### Geographic Navigation
-
-<p align="center">
-  <img
-    src="docs/assets/World_view.png"
-    alt="GeoWatch wider geographic map view"
-    width="100%"
-  />
-</p>
-
-The interactive map supports zooming and navigation while maintaining the historical and recent imagery comparison layers.
-
----
-
-## Deployment
-
-| Service | Link |
-|---|---|
-| Web Application | [Open GeoWatch](https://geowatch-app-825325.onrender.com) |
-| Backend Health | [Check API Status](https://geowatch-api-825325.onrender.com/health) |
-
-The deployed demonstration displays model-generated change polygons for the selected Kokapet, Hyderabad region.
-
-> The Hyderabad deployment is a qualitative demonstration. Detected polygons represent candidate change regions and should be reviewed together with the source satellite imagery.
-
----
-
-## Processing Workflow
-
-1. Load aligned historical and recent Sentinel-2 observations.
-2. Validate bands, dimensions, metadata, and spatial alignment.
-3. Normalize and divide the imagery into model-ready patches.
-4. Predict pixel-level change probabilities.
-5. Apply thresholding and connected-component filtering.
-6. Convert detected regions into valid polygons.
-7. Store polygon geometries and statistics in PostGIS.
-8. Serve results through FastAPI.
-9. Display spatial evidence in the Next.js dashboard.
+1. Load historical and recent Sentinel-2 images.
+2. Validate bands, dimensions, and spatial alignment.
+3. Generate pixel-level change probabilities.
+4. Apply thresholding and connected-component filtering.
+5. Convert detected regions into valid polygons.
+6. Store polygons and statistics in PostGIS.
+7. Serve the results through FastAPI.
+8. Display the results in the Next.js dashboard.
 
 ---
 
 ## Project Structure
 
 ```text
-geowatch/
-├── artifacts/
-├── configs/
-├── data/
-├── deploy/
-├── docs/
-│   ├── assets/
-│   │   ├── Artichitecture.png
-│   │   ├── Enhanced.png
-│   │   ├── Geo-watch_Dashboard.png
-│   │   ├── Natural.png
-│   │   └── World_view.png
-│   ├── datasets/
-│   ├── backend-postgis-runbook.md
-│   └── week1_data_pipeline_summary.md
-├── experiments/
-├── migrations/
-├── notebooks/
-├── reports/
-├── src/
-└── tests/
+Geo-Watch/
+├── README.md
+├── geowatch/
+│   ├── configs/
+│   ├── data/
+│   ├── deploy/
+│   ├── docs/
+│   │   └── assets/
+│   │       ├── Artichitecture.png
+│   │       ├── Enhanced.png
+│   │       ├── Geo-watch_Dashboard.png
+│   │       ├── Natural.png
+│   │       └── World_view.png
+│   ├── experiments/
+│   ├── migrations/
+│   ├── notebooks/
+│   ├── reports/
+│   ├── src/
+│   └── tests/
+└── geowatch-frontend/
 ```
 
 ---
 
 ## Responsible Use
 
-GeoWatch outputs are model-generated candidate change regions intended to support visual analysis. They should not be treated as independently verified real-world events or used for safety-critical, legal, or enforcement decisions without human validation.
+GeoWatch detections are model-generated candidate change regions. Results should be reviewed together with the original satellite imagery before making operational decisions.
 
 ---
 
@@ -191,12 +178,3 @@ GeoWatch outputs are model-generated candidate change regions intended to suppor
 **Deepika Kumari**
 
 Computer Vision and AI Engineer
-
----
-
-<div align="center">
-
-[Live Demo](https://geowatch-app-825325.onrender.com) ·
-[API Health](https://geowatch-api-825325.onrender.com/health)
-
-</div>
