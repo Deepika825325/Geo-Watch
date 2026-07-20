@@ -1,0 +1,42 @@
+FROM python:3.11-slim-bookworm AS builder
+
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1
+ENV PIP_NO_CACHE_DIR=1
+
+WORKDIR /build
+
+COPY deploy/requirements.backend.txt /build/requirements.backend.txt
+
+RUN python -m pip install --upgrade pip && python -m pip install --prefix=/install -r /build/requirements.backend.txt
+
+FROM python:3.11-slim-bookworm AS runtime
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV MODEL_BACKEND=onnx_cpu
+ENV GEOWATCH_DEVICE=cpu
+ENV GEOWATCH_BATCH_SIZE=4
+ENV PORT=8007
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install --yes --no-install-recommends libexpat1 libgomp1 && rm -rf /var/lib/apt/lists/*
+RUN groupadd --gid 10001 geowatch && useradd --uid 10001 --gid geowatch --create-home geowatch
+
+COPY --from=builder /install /usr/local
+COPY src /app/src
+COPY migrations /app/migrations
+COPY reports/week7/hyderabad_qualitative/hyderabad_qualitative_changes.geojson /app/demo/hyderabad/hyderabad_qualitative_changes.geojson
+COPY reports/week7/hyderabad_qualitative/hyderabad_qualitative_probability.tif /app/demo/hyderabad/hyderabad_qualitative_probability.tif
+COPY reports/week7/hyderabad_qualitative/hyderabad_qualitative_mask.tif /app/demo/hyderabad/hyderabad_qualitative_mask.tif
+COPY deploy/model.onnx /app/deploy/model.onnx
+
+RUN mkdir -p /app/artifacts && chown -R geowatch:geowatch /app
+
+USER geowatch
+
+EXPOSE 8007
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 CMD python -c "import os, urllib.request; port=os.environ.get('PORT', '8007'); urllib.request.urlopen('http://127.0.0.1:' + port + '/health', timeout=4).read()" || exit 1
+
+CMD ["sh", "-c", "uvicorn src.backend.main:app --host 0.0.0.0 --port ${PORT:-8007}"]

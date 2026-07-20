@@ -1,0 +1,15 @@
+*
+!src/
+!src/**
+!migrations/
+!migrations/**
+!deploy/
+!deploy/Dockerfile.backend
+!deploy/requirements.backend.txt
+!deploy/model.onnx
+!reports/
+!reports/week7/
+!reports/week7/hyderabad_qualitative/
+!reports/week7/hyderabad_qualitative/hyderabad_qualitative_changes.geojson
+!reports/week7/hyderabad_qualitative/hyderabad_qualitative_probability.tif
+!reports/week7/hyderabad_qualitative/hyderabad_qualitative_mask.tif

@@ -96,3 +96,9 @@ data/**/*.7z
 # Local training data and generated artifacts
 data/
 *.pyc
+.env.week7.local
+artifacts/inference/
+data/qualitative/hyderabad/
+!.env.week7.example
+
+!deploy/model.onnx

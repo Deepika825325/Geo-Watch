@@ -1,0 +1,76 @@
+{
+  "access": {
+    "image_pixels_accessed": true,
+    "model_inference_executed": true,
+    "model_retrained": false,
+    "official_test_artifacts_modified": false,
+    "threshold_retuned": false
+  },
+  "evaluation_role": "unlabelled_qualitative_demonstration",
+  "ground_truth_available": false,
+  "label": "qualitative_only_no_ground_truth_metrics",
+  "outputs": [
+    {
+      "media_type": "image/tiff; application=geotiff",
+      "path": "reports/week7/hyderabad_qualitative/hyderabad_qualitative_probability.tif",
+      "qualitative": true,
+      "role": "qualitative_probability_raster",
+      "sha256": "880301a932b7232b42def7298f7dda9d4410246da18fb68e006039fe647f3798",
+      "size_bytes": 742883
+    },
+    {
+      "media_type": "image/tiff; application=geotiff",
+      "path": "reports/week7/hyderabad_qualitative/hyderabad_qualitative_mask.tif",
+      "qualitative": true,
+      "role": "qualitative_binary_mask",
+      "sha256": "23bbfed9f9a1ff6df64f9136e2aae02864772e095056859a7b5ec4bb2e3886fe",
+      "size_bytes": 6055
+    },
+    {
+      "media_type": "image/png",
+      "path": "reports/week7/hyderabad_qualitative/hyderabad_qualitative_visualization.png",
+      "qualitative": true,
+      "role": "qualitative_visualization",
+      "sha256": "27b54c1c0a0f5f65294ba7668a84c9e7fb76cfccad5a7f4fb663671b01cac930",
+      "size_bytes": 5643338
+    }
+  ],
+  "performance_metrics_allowed": false,
+  "performance_metrics_reported": false,
+  "protocol": {
+    "bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B08"
+    ],
+    "checkpoint_epoch": 24,
+    "checkpoint_sha256": "61e53ba86bc108d6ccbbb636c8da88c967e07da41471504878c74df6a903ea94",
+    "device": "cuda",
+    "patch_count": 4,
+    "patch_size": 256,
+    "stride": 256,
+    "threshold": 0.76
+  },
+  "raster": {
+    "crs": "EPSG:32644",
+    "height": 512,
+    "transform": [
+      10.0,
+      0.0,
+      213774.52715530345,
+      0.0,
+      -10.0,
+      1926749.7587847603,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "width": 512
+  },
+  "source": {
+    "aligned_pair_manifest": "reports/week7/hyderabad_qualitative/aligned_pair_manifest.json",
+    "aligned_pair_manifest_sha256": "ec40cdf4dce205b66e3d60285edb9763569592775e846d66357bbcc72d4459ba",
+    "input_root": "data/qualitative/hyderabad"
+  }
+}

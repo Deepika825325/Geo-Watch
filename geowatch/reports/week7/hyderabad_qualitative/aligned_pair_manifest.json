@@ -1,0 +1,348 @@
+{
+  "access": {
+    "f1_reported": false,
+    "image_pixels_accessed": true,
+    "iou_reported": false,
+    "model_inference_executed": false,
+    "official_test_artifacts_modified": false,
+    "precision_reported": false,
+    "recall_reported": false
+  },
+  "bands": [
+    "B02",
+    "B03",
+    "B04",
+    "B08"
+  ],
+  "collection": "sentinel-2-l2a",
+  "grid": {
+    "bottom": 1921629.7587847603,
+    "epsg": 32644,
+    "height": 512,
+    "left": 213774.52715530345,
+    "pixel_size": 10.0,
+    "right": 218894.52715530345,
+    "top": 1926749.7587847603,
+    "transform": [
+      10.0,
+      0.0,
+      213774.52715530345,
+      0.0,
+      -10.0,
+      1926749.7587847603,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "width": 512
+  },
+  "ground_truth_available": false,
+  "label": "qualitative_only_no_ground_truth_metrics",
+  "metrics_allowed": false,
+  "outputs": [
+    {
+      "band": "B02",
+      "maximum": 6727,
+      "mean": 883.4276809692383,
+      "minimum": 11,
+      "nonzero_pixels": 262144,
+      "path": "data/qualitative/hyderabad/before/B02.tif",
+      "period": "before",
+      "sha256": "7498074534e62a9977ca98ab4a39a74878cd029eb409ca75a45e523e99460f1d",
+      "size_bytes": 380597,
+      "source": {
+        "crs": "EPSG:32643",
+        "dtype": "uint16",
+        "height": 10980,
+        "nodata": null,
+        "transform": [
+          10.0,
+          0.0,
+          799980.0,
+          0.0,
+          -10.0,
+          2000040.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "width": 10980
+      }
+    },
+    {
+      "band": "B03",
+      "maximum": 7088,
+      "mean": 1241.7929191589355,
+      "minimum": 212,
+      "nonzero_pixels": 262144,
+      "path": "data/qualitative/hyderabad/before/B03.tif",
+      "period": "before",
+      "sha256": "fde79e9e9f103bd9266d6493c5400bf571abac5d5151d09710ae02bbf685899d",
+      "size_bytes": 385537,
+      "source": {
+        "crs": "EPSG:32643",
+        "dtype": "uint16",
+        "height": 10980,
+        "nodata": null,
+        "transform": [
+          10.0,
+          0.0,
+          799980.0,
+          0.0,
+          -10.0,
+          2000040.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "width": 10980
+      }
+    },
+    {
+      "band": "B04",
+      "maximum": 7484,
+      "mean": 1562.5201568603516,
+      "minimum": 51,
+      "nonzero_pixels": 262144,
+      "path": "data/qualitative/hyderabad/before/B04.tif",
+      "period": "before",
+      "sha256": "63b58634aaa7968d940b2974033a00547d582d347855689f43ff7b4861695f3d",
+      "size_bytes": 396505,
+      "source": {
+        "crs": "EPSG:32643",
+        "dtype": "uint16",
+        "height": 10980,
+        "nodata": null,
+        "transform": [
+          10.0,
+          0.0,
+          799980.0,
+          0.0,
+          -10.0,
+          2000040.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "width": 10980
+      }
+    },
+    {
+      "band": "B08",
+      "maximum": 7224,
+      "mean": 2452.4244499206543,
+      "minimum": 72,
+      "nonzero_pixels": 262144,
+      "path": "data/qualitative/hyderabad/before/B08.tif",
+      "period": "before",
+      "sha256": "a10dd42d1b0a036ba7c8146e34d69f95954a33b0034351a768a0220545f63939",
+      "size_bytes": 395867,
+      "source": {
+        "crs": "EPSG:32643",
+        "dtype": "uint16",
+        "height": 10980,
+        "nodata": null,
+        "transform": [
+          10.0,
+          0.0,
+          799980.0,
+          0.0,
+          -10.0,
+          2000040.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "width": 10980
+      }
+    },
+    {
+      "band": "B02",
+      "maximum": 7912,
+      "mean": 1886.281379699707,
+      "minimum": 1106,
+      "nonzero_pixels": 262144,
+      "path": "data/qualitative/hyderabad/after/B02.tif",
+      "period": "after",
+      "sha256": "7f2e2acb455ea5c06c7a9167a4a6f15daea8c2693ba0e20eaf44d7d4f370ecf2",
+      "size_bytes": 381830,
+      "source": {
+        "crs": "EPSG:32643",
+        "dtype": "uint16",
+        "height": 10980,
+        "nodata": 0.0,
+        "transform": [
+          10.0,
+          0.0,
+          799980.0,
+          0.0,
+          -10.0,
+          2000040.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "width": 10980
+      }
+    },
+    {
+      "band": "B03",
+      "maximum": 8804,
+      "mean": 2158.1030654907227,
+      "minimum": 1145,
+      "nonzero_pixels": 262144,
+      "path": "data/qualitative/hyderabad/after/B03.tif",
+      "period": "after",
+      "sha256": "2e535cb6f93fff2b13a7e0b6d773ef1f6852e81600b9f5b8281795f2098069a1",
+      "size_bytes": 384506,
+      "source": {
+        "crs": "EPSG:32643",
+        "dtype": "uint16",
+        "height": 10980,
+        "nodata": 0.0,
+        "transform": [
+          10.0,
+          0.0,
+          799980.0,
+          0.0,
+          -10.0,
+          2000040.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "width": 10980
+      }
+    },
+    {
+      "band": "B04",
+      "maximum": 9244,
+      "mean": 2364.4341430664062,
+      "minimum": 1062,
+      "nonzero_pixels": 262144,
+      "path": "data/qualitative/hyderabad/after/B04.tif",
+      "period": "after",
+      "sha256": "1e42c41d60999c7b07383e782fe58f42908c18ee841b1c41964f0a91bd86d1e8",
+      "size_bytes": 392316,
+      "source": {
+        "crs": "EPSG:32643",
+        "dtype": "uint16",
+        "height": 10980,
+        "nodata": 0.0,
+        "transform": [
+          10.0,
+          0.0,
+          799980.0,
+          0.0,
+          -10.0,
+          2000040.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "width": 10980
+      }
+    },
+    {
+      "band": "B08",
+      "maximum": 10968,
+      "mean": 3211.8942527770996,
+      "minimum": 0,
+      "nonzero_pixels": 262127,
+      "path": "data/qualitative/hyderabad/after/B08.tif",
+      "period": "after",
+      "sha256": "5ae07234e1ccf688cb9c69bf1e1428d2961ade952f639e047770c2e0c76c0698",
+      "size_bytes": 392708,
+      "source": {
+        "crs": "EPSG:32643",
+        "dtype": "uint16",
+        "height": 10980,
+        "nodata": 0.0,
+        "transform": [
+          10.0,
+          0.0,
+          799980.0,
+          0.0,
+          -10.0,
+          2000040.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "width": 10980
+      }
+    }
+  ],
+  "selected": {
+    "after": {
+      "asset_keys": [
+        "AOT",
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B09",
+        "B11",
+        "B12",
+        "B8A",
+        "SCL",
+        "WVP",
+        "datastrip-metadata",
+        "granule-metadata",
+        "inspire-metadata",
+        "product-metadata",
+        "rendered_preview",
+        "safe-manifest",
+        "tilejson",
+        "visual"
+      ],
+      "cloud_cover": 0.000894,
+      "datetime": "2025-03-28T05:06:59.024000+00:00",
+      "item_id": "S2B_MSIL2A_20250328T050659_R019_T43QHV_20250328T072008",
+      "mgrs_tile": "43QHV",
+      "platform": "Sentinel-2B",
+      "projection_epsg": null
+    },
+    "before": {
+      "asset_keys": [
+        "AOT",
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B09",
+        "B11",
+        "B12",
+        "B8A",
+        "SCL",
+        "WVP",
+        "datastrip-metadata",
+        "granule-metadata",
+        "inspire-metadata",
+        "preview",
+        "product-metadata",
+        "rendered_preview",
+        "safe-manifest",
+        "tilejson",
+        "visual"
+      ],
+      "cloud_cover": 0.056666,
+      "datetime": "2020-03-29T05:06:51.024000+00:00",
+      "item_id": "S2A_MSIL2A_20200329T050651_R019_T43QHV_20201020T215529",
+      "mgrs_tile": "43QHV",
+      "platform": "Sentinel-2A",
+      "projection_epsg": null
+    },
+    "day_of_year_difference": 2
+  },
+  "source_selection": "reports/week7/hyderabad_qualitative/scene_selection.json",
+  "source_selection_sha256": "e74eb45fd1c3fbdb8974acfe2d32158edeb3f40f42018b8883d30b2294cd3034"
+}

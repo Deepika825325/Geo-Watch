@@ -1,0 +1,41 @@
+{
+  "checkpoint": {
+    "epoch": 24,
+    "path": "experiments/run_full/checkpoints/best_model_epoch24.pt",
+    "sha256": "61e53ba86bc108d6ccbbb636c8da88c967e07da41471504878c74df6a903ea94"
+  },
+  "parity": {
+    "binary_mask_pixel_agreement": 1.0,
+    "cuda_changed_pixels": 3421,
+    "evaluated_pixels": 65536,
+    "max_absolute_logit_difference": 1.913309097290039e-05,
+    "max_absolute_probability_difference": 4.678964614868164e-06,
+    "mean_absolute_logit_difference": 6.613159939661273e-07,
+    "mean_absolute_probability_difference": 9.504299214313505e-08,
+    "onnx_changed_pixels": 3421
+  },
+  "protocol": {
+    "bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B08"
+    ],
+    "patch_size": 256,
+    "threshold": 0.76
+  },
+  "runtime": {
+    "onnx_opset": 17,
+    "onnx_provider": "CPUExecutionProvider",
+    "pytorch_reference": "CUDA"
+  },
+  "sample": {
+    "column": 0,
+    "dataset_index": 0,
+    "ground_truth_changed_pixels": 2977,
+    "patch_id": "brasilia_r00_y00000_x00000_h256_w256",
+    "region": "brasilia",
+    "row": 0,
+    "valid_pixels": 65536
+  }
+}
