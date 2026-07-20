@@ -215,7 +215,7 @@ The GeoWatch interface combines satellite comparison, geospatial overlays, and i
 
 <p align="center">
   <img
-    src="geowatch/docs/assets/Dashboard.png"
+    src="geowatch/docs/assets/Geo-watch_Dashboard.png"
     alt="GeoWatch dashboard with satellite comparison and spatial evidence"
     width="100%"
   />
@@ -253,7 +253,7 @@ GeoWatch supports two visualization modes for image inspection.
   <tr>
     <td width="50%">
       <img
-        src="geowatch/docs/assets/Dashboard.png"
+        src="geowatch/docs/assets/natural.png"
         alt="GeoWatch natural satellite rendering"
         width="100%"
       />
