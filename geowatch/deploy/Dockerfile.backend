@@ -26,6 +26,9 @@ RUN groupadd --gid 10001 geowatch && useradd --uid 10001 --gid geowatch --create
 COPY --from=builder /install /usr/local
 COPY src /app/src
 COPY migrations /app/migrations
+COPY reports/week7/hyderabad_qualitative/hyderabad_qualitative_changes.geojson /app/demo/hyderabad/hyderabad_qualitative_changes.geojson
+COPY reports/week7/hyderabad_qualitative/hyderabad_qualitative_probability.tif /app/demo/hyderabad/hyderabad_qualitative_probability.tif
+COPY reports/week7/hyderabad_qualitative/hyderabad_qualitative_mask.tif /app/demo/hyderabad/hyderabad_qualitative_mask.tif
 COPY deploy/model.onnx /app/deploy/model.onnx
 
 RUN mkdir -p /app/artifacts && chown -R geowatch:geowatch /app

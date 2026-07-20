@@ -26,6 +26,10 @@ from sqlalchemy.exc import SQLAlchemyError
 from src.backend.bootstrap import (
     initialize_database,
 )
+from src.backend.demo import (
+    demo_seed_enabled,
+    ensure_demo_data,
+)
 from src.backend.database import (
     DuplicateInferenceRequestError,
     GeoWatchDatabase,
@@ -332,6 +336,15 @@ def create_lifespan(
                 initialize_database(
                     database.engine
                 )
+
+                if demo_seed_enabled():
+                    ensure_demo_data(
+                        database=database,
+                        artifact_root=cast(
+                            Path,
+                            app.state.artifact_root,
+                        ),
+                    )
             except Exception:
                 database.dispose()
                 raise

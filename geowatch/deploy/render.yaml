@@ -25,6 +25,8 @@ services:
         value: cpu
       - key: GEOWATCH_BATCH_SIZE
         value: "4"
+      - key: GEOWATCH_SEED_DEMO
+        value: "true"
       - key: GEOWATCH_DATABASE_URL
         fromDatabase:
           name: geowatch-db-825325
@@ -46,3 +48,5 @@ services:
           type: web
           name: geowatch-api-825325
           envVarKey: RENDER_EXTERNAL_HOSTNAME
+      - key: NEXT_PUBLIC_GEOWATCH_REQUEST_ID
+        value: "896053f3-e56c-54cd-be88-d3efb4edd8c6"
